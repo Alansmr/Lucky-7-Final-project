@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Financial Portfolio</title>
+  <link rel="stylesheet" href="css/stock.css">
+</head>
+<body>
+  <!-- 主内容区 -->
+  <div class="main-container">
+    <!-- 左侧投资组合区域（占1/3视口宽度） -->
+    <div class="portfolio-container">
+      <div class="portfolio-header" onclick="changeColorAndJump(this)">Financial Portfolio</div>
+      <div class="portfolio-list" id="portfolioList">
+        <!-- 动态添加的投资组合项将显示在这里 -->
+      </div>
+      <div id="portfolioTotal" class="portfolio-total">
+        Total: 0
+      </div>
+    </div>
+
+    <!-- 右侧区域（占2/3视口宽度） -->
+    <div class="right-container">
+      <!-- 右侧工具栏 -->
+      <div class="nav">
+        <div class="nav-item active" onclick="setActive(this)">Stock</div>
+        <div class="nav-item" onclick="setActive(this)">Fund</div>
+        <div class="nav-item" onclick="setActive(this)">Bond</div>
+      </div>
+
+      <!-- 右侧股票表格区域 -->
+      <div class="stock-container">
+        <!-- 表头 -->
+        <div class="table-header">
+          <div>Company Name</div>
+          <div>Ticker</div>
+          <div>Current Price</div>
+          <div>Increase(%)</div>
+          <div>Increase(Amount)</div>
+          <div>Action</div>
+        </div>
+        <!-- 数据行 -->
+        <div class="table-row">
+          <div>浙江东方</div>
+          <div>600120</div>
+          <div class="red">6.27</div>
+          <div class="red">+0.64%</div>
+          <div class="red">0.04</div>
+          <div><button class="add-btn" onclick="addToPortfolio('浙江东方', '600120', '6.27')">Add</button></div>
+        </div>
+        <div class="table-row">
+          <div>欧菲光</div>
+          <div>002456</div>
+          <div class="red">11.54</div>
+          <div class="red">+0.52%</div>
+          <div class="red">0.06</div>
+          <div><button class="add-btn" onclick="addToPortfolio('欧菲光', '002456', '11.54')">Add</button></div>
+        </div>
+        <div class="table-row">
+          <div>维信诺</div>
+          <div>002387</div>
+          <div class="red">9.64</div>
+          <div class="red">+1.37%</div>
+          <div class="red">0.13</div>
+          <div><button class="add-btn" onclick="addToPortfolio('维信诺', '002387', '9.64')">Add</button></div>
+        </div>
+        <div class="table-row">
+          <div>海量数据</div>
+          <div>603138</div>
+          <div class="green">15.04</div>
+          <div class="green">-1.25%</div>
+          <div class="green">-0.19</div>
+          <div><button class="add-btn" onclick="addToPortfolio('海量数据', '603138', '15.04')">Add</button></div>
+        </div>
+        <div class="table-row">
+          <div>京东方A</div>
+          <div>000725</div>
+          <div class="gray">4.10</div>
+          <div class="gray">0.00%</div>
+          <div class="gray">0.00</div>
+          <div><button class="add-btn" onclick="addToPortfolio('京东方A', '000725', '4.10')">Add</button></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/stock.js"></script>
+</body>
+</html>
+    

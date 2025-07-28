@@ -1,0 +1,197 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: #f9f9f9;
+  font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+  color: #333;
+  padding: 0;
+}
+
+/* 主内容区布局 - 占满整个页面宽度 */
+.main-container {
+  width: 100vw;
+  display: flex;
+  gap: 0;
+}
+
+/* 左侧投资组合区域（严格占1/3宽度） */
+.portfolio-container {
+  width: 33.333vw;
+  border: 2px solid #e0e0e0;
+  padding: 15px;
+  background-color: #fff;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+.portfolio-header {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 15px;
+  cursor: pointer;
+  transition: color 0.3s;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eee;
+  text-align: center;
+}
+
+.portfolio-header.blue {
+  color: #165DFF;
+}
+
+.portfolio-list {
+  margin-top: 15px;
+}
+
+.portfolio-item {
+  padding: 10px 0;
+  border-bottom: 1px dashed #ccc;
+  display: flex;
+  justify-content: space-between;
+}
+
+.portfolio-total {
+  margin-top: 20px;
+  text-align: right;
+  font-weight: bold;
+}
+
+/* 右侧区域（占2/3宽度） */
+.right-container {
+  width: 66.666vw;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+/* 右侧工具栏 */
+.nav {
+  width: 100%;
+  display: flex;
+  border: 1px solid #e6e9ed;
+  background-color: #fff;
+  margin-bottom: 20px;
+}
+
+.nav-item {
+  flex: 1;
+  text-align: center;
+  padding: 12px 0;
+  border-right: 1px solid #e6e9ed;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.nav-item:hover {
+  background-color: #f0f2f5;
+}
+
+.nav-item.active {
+  background-color: #fff;
+  font-weight: bold;
+  border-bottom: 2px solid #165DFF;
+}
+
+.nav-item:last-child {
+  border-right: none;
+}
+
+/* 右侧股票表格区域 */
+.stock-container {
+  width: 100%;
+  border: 1px solid #e6e9ed;
+  background-color: #fff;
+}
+
+/* 表头样式 */
+.table-header {
+  display: flex;
+  background-color: #f5f7fa;
+  border-bottom: 1px solid #e6e9ed;
+  font-weight: bold;
+}
+
+.table-header>div {
+  flex: 1;
+  text-align: center;
+  padding: 12px 0;
+  border-right: 1px solid #e6e9ed;
+}
+
+.table-header>div:last-child {
+  flex: 0.5;
+  border-right: none;
+}
+
+/* 行样式 */
+.table-row {
+  display: flex;
+  border-bottom: 1px solid #e6e9ed;
+  transition: background-color 0.2s;
+}
+
+.table-row:hover {
+  background-color: #f9fafb;
+}
+
+.table-row>div {
+  flex: 1;
+  text-align: center;
+  padding: 12px 0;
+  border-right: 1px solid #e6e9ed;
+}
+
+.table-row>div:last-child {
+  flex: 0.5;
+  border-right: none;
+}
+
+/* 按钮样式 */
+.add-btn {
+  padding: 6px 12px;
+  background-color: #165DFF;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.add-btn:hover {
+  background-color: #0E42D2;
+}
+
+/* 删除按钮样式 */
+.delete-btn {
+  padding: 4px 10px;
+  background-color: #F53F3F;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-left: 8px;
+  transition: background-color 0.3s;
+}
+
+.delete-btn:hover {
+  background-color: #d32f2f;
+}
+
+/* 涨跌颜色逻辑 */
+.red {
+  color: #F53F3F;
+}
+
+.green {
+  color: #00B42A;
+}
+
+.gray {
+  color: #86909C;
+}
+    
