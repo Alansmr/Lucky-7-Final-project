@@ -15,8 +15,46 @@ function changeColorAndJump(element) {
   }, 300);
 }
 
-// 添加股票到投资组合
-function addToPortfolio(name, code, price) {
+// 弹窗函数
+function showPopup(msg) {
+  let popup = document.getElementById('customPopup');
+  let closeBtn = document.getElementById('popupCloseBtn');
+  if (!popup) {
+    popup = document.createElement('div');
+    popup.id = 'customPopup';
+    popup.className = 'custom-popup';
+    popup.innerHTML = `<span id="popupMsg"></span><button id="popupCloseBtn">OK</button>`;
+    document.body.appendChild(popup);
+    closeBtn = document.getElementById('popupCloseBtn');
+  }
+  document.getElementById('popupMsg').textContent = msg;
+  popup.style.display = 'block';
+  // 重新绑定关闭事件，确保每次都有效
+  closeBtn.onclick = () => {
+    popup.style.display = 'none';
+  };
+}
+
+// 修改添加股票逻辑
+async function addToPortfolio(name, code, price) {
+  // 先请求后端插入
+  try {
+    const res = await fetch('/api/holderinfo/add', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ companyname: name, code, price: Number(price) })
+    });
+    const result = await res.json();
+    if (!result.success) {
+      showPopup(result.message || 'Stock already exists in portfolio!');
+      return;
+    }
+  } catch (err) {
+    showPopup('Network error, please try again.');
+    return;
+  }
+
+  // 原有添加到页面逻辑
   const portfolioList = document.getElementById('portfolioList');
   const newItem = document.createElement('div');
   newItem.className = 'portfolio-item';
