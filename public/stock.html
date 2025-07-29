@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Financial Portfolio</title>
+  <link rel="stylesheet" href="css/stock.css">
+</head>
+<body>
+  <!-- 主内容区 -->
+  <div class="main-container">
+    <!-- 左侧投资组合区域（占1/3视口宽度） -->
+    <div class="portfolio-container">
+      <div class="portfolio-header" onclick="changeColorAndJump(this)">Financial Portfolio</div>
+      <div class="portfolio-list" id="portfolioList">
+        <!-- 动态添加的投资组合项将显示在这里 -->
+      </div>
+      <div id="portfolioTotal" class="portfolio-total">
+        Total: 0
+      </div>
+    </div>
+
+    <!-- 右侧区域（占2/3视口宽度） -->
+    <div class="right-container">
+      <!-- 右侧工具栏 -->
+      <div class="nav">
+        <div class="nav-item active" onclick="setActive(this)">Stock</div>
+        <div class="nav-item" onclick="setActive(this)">Fund</div>
+        <div class="nav-item" onclick="setActive(this)">Bond</div>
+      </div>
+
+      <!-- 右侧股票表格区域 -->
+      <div class="stock-container">
+        <!-- 表头 -->
+        <div class="table-header">
+          <div>Company Name</div>
+          <div>Ticker</div>
+          <div>Current Price</div>
+          <div>Increase(%)</div>
+          <div>Increase(Amount)</div>
+          <div>Action</div>
+        </div>
+        <!-- 数据行将通过JavaScript动态生成 -->
+      </div>
+    </div>
+  </div>
+
+  <script src="js/stock.js"></script>
+</body>
+</html>
