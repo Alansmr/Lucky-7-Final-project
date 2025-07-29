@@ -4,6 +4,7 @@ import { getStockData } from '../services/stockService.js';
 import { getStockDataByName } from '../services/stockService.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { createClient } from '@supabase/supabase-js';
 
 const router = express.Router();
 
@@ -12,6 +13,10 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename); // 得到 src/routes 目录
 
 const htmlPath = path.join(__dirname, '..', '..', 'public', 'stock.html');
+
+const supabaseUrl = 'https://zrtrmddtacmaeuzupodz.supabase.co';
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'; // 你的 Supabase Key
+const supabase = createClient(supabaseUrl, supabaseKey);
 
 router.get('/stocks', (req, res) => {
   
@@ -35,14 +40,63 @@ router.get('/api/stocks', async (req, res) => {
   }
 });
 
-//根据股票公司名字的详细信息接口
-router.get('/api/stocks/:name', async (req, res) => {
-  const name = req.params.name;
+router.get('/company/:name', async (req, res) => {
+  const companyName = req.params.name;
   try {
-    const stockData = await getStockDataByName(name);
-    res.json(stockData);
+    const stocks = await getStockData();
+    const stock = stocks.find(s => s.companyName === companyName);
+    if (!stock) {
+      return res.status(404).send(`<h1>Company "${companyName}" not found.</h1>`);
+    }
+
+    // 用 ticker 查询 Supabase 最新一条详细数据
+    const { data, error } = await supabase
+      .from('stackinfo')
+      .select('open, high, close, volume, timestamp')
+      .eq('ticker', stock.ticker)
+      .order('timestamp', { ascending: false })
+      .limit(1);
+
+    if (error) {
+      return res.status(500).send(`<h1>Supabase 查询出错: ${error.message}</h1>`);
+    }
+    if (!data || data.length === 0) {
+      return res.status(404).send(`<h1>No detailed data found for "${companyName}".</h1>`);
+    }
+
+    const detail = data[0];
+
+    res.send(`
+      <!DOCTYPE html>
+      <html lang="en">
+      <head>
+        <meta charset="UTF-8">
+        <title>${companyName} Details</title>
+        <style>
+          body { font-family: Arial, sans-serif; padding: 40px; }
+          a { color: #0077cc; text-decoration: none; }
+          a:hover { text-decoration: underline; }
+          table { border-collapse: collapse; margin-top: 20px; }
+          th, td { border: 1px solid #ccc; padding: 8px 16px; }
+          th { background: #f0f0f0; }
+        </style>
+      </head>
+      <body>
+        <h1>${companyName} 股票详情</h1>
+        <table>
+          <tr><th>Open</th><td>${detail.open ?? '-'}</td></tr>
+          <tr><th>High</th><td>${detail.high ?? '-'}</td></tr>
+          <tr><th>Close</th><td>${detail.close ?? '-'}</td></tr>
+          <tr><th>Volume</th><td>${detail.volume ?? '-'}</td></tr>
+          <tr><th>Timestamp</th><td>${detail.timestamp ?? '-'}</td></tr>
+        </table>
+        <a href="/stocks" target="_self">返回股票列表</a>
+      </body>
+      </html>
+    `);
   } catch (error) {
-    res.status(500).json({ error: '获取股票数据失败' });
+    res.status(500).send('服务器错误');
   }
 });
+
 export default router;

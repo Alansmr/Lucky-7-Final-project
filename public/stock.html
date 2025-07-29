@@ -7,11 +7,12 @@
   <link rel="stylesheet" href="css/stock.css">
 </head>
 <body>
+
   <!-- 主内容区 -->
   <div class="main-container">
     <!-- 左侧投资组合区域（占1/3视口宽度） -->
     <div class="portfolio-container">
-      <div class="portfolio-header" onclick="changeColorAndJump(this)">Financial Portfolio</div>
+      <div class="portfolio-header" onclick="changeColorAndJump(this)">My Financial Portfolio</div>
       <div class="portfolio-list" id="portfolioList">
         <!-- 动态添加的投资组合项将显示在这里 -->
       </div>
@@ -22,15 +23,33 @@
 
     <!-- 右侧区域（占2/3视口宽度） -->
     <div class="right-container">
-      <!-- 右侧工具栏 -->
+      <!-- 工具栏 -->
       <div class="nav">
         <div class="nav-item active" onclick="setActive(this)">Stock</div>
         <div class="nav-item" onclick="setActive(this)">Fund</div>
         <div class="nav-item" onclick="setActive(this)">Bond</div>
       </div>
 
-      <!-- 右侧股票表格区域 -->
+      <!-- 搜索栏，放在工具栏和表格之间 -->
+      <div class="search-row">
+        <div class="search-bar">
+          <input
+            type="text"
+            id="stockSearchInput"
+            placeholder="Search by company name or ticker."
+          />
+        </div>
+        <span class="search-icon-outer" id="searchBtn">
+          <svg id="searchIconSvg" width="22" height="22" viewBox="0 0 22 22" fill="none">
+            <circle cx="10" cy="10" r="8" stroke="#888" stroke-width="2"/>
+            <line x1="16.2" y1="16.2" x2="21" y2="21" stroke="#888" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </span>
+      </div>
+
+      <!-- 股票表格 -->
       <div class="stock-container">
+        <!-- 表头和表格内容由JS渲染 -->
         <!-- 表头 -->
         <div class="table-header">
           <div>Company Name</div>
