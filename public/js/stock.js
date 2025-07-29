@@ -57,41 +57,89 @@ function updatePortfolioTotal() {
 }
     
 
+let allStocks = []; // 保存所有股票数据
+
 // 从后端获取股票数据并渲染表格
 async function fetchAndRenderStocks() {
   try {
     const response = await fetch('/api/stocks');
     const stocks = await response.json();
-    
-    const stockContainer = document.querySelector('.stock-container');
-    const tableHeader = stockContainer.querySelector('.table-header');
-    stockContainer.innerHTML = '';
-    stockContainer.appendChild(tableHeader);
-    
-    stocks.forEach(stock => {
-      const row = document.createElement('div');
-      row.className = 'table-row';
-      
-      // 确定价格变化样式
-      const priceClass = stock.increaseAmount > 0 ? 'red' : 
-                        stock.increaseAmount < 0 ? 'green' : 'gray';
-      
-      row.innerHTML = `
-        <div>${stock.companyName}</div>
-        <div>${stock.ticker}</div>
-        <div class="${priceClass}">${stock.currentPrice}</div>
-        <div class="${priceClass}">${stock.increasePercent}</div>
-        <div class="${priceClass}">${stock.increaseAmount}</div>
-        <div><button class="add-btn" onclick="addToPortfolio('${stock.companyName}', '${stock.ticker}', '${stock.currentPrice}')">Add</button></div>
-      `;
-      
-      stockContainer.appendChild(row);
-    });
+    allStocks = stocks; // 保存原始数据
+    renderStocks(stocks);
   } catch (error) {
     console.error('Failed to fetch stocks:', error);
-    // 可以在这里添加错误处理UI
   }
 }
+
+// 渲染股票表格
+function renderStocks(stocks) {
+  const stockContainer = document.querySelector('.stock-container');
+  const tableHeader = stockContainer.querySelector('.table-header');
+  stockContainer.innerHTML = '';
+  if (tableHeader) stockContainer.appendChild(tableHeader);
+
+  stocks.forEach(stock => {
+    const row = document.createElement('div');
+    row.className = 'table-row';
+    
+    // 确定价格变化样式
+    const priceClass = stock.increaseAmount > 0 ? 'red' : 
+                      stock.increaseAmount < 0 ? 'green' : 'gray';
+    
+    row.innerHTML = `
+      <div>
+        <a href="/company/${encodeURIComponent(stock.companyName)}" class="company-link" target="_blank">
+          ${stock.companyName}
+        </a>
+      </div>
+      <div>${stock.ticker}</div>
+      <div class="${priceClass}">${stock.currentPrice}</div>
+      <div class="${priceClass}">${stock.increasePercent}</div>
+      <div class="${priceClass}">${stock.increaseAmount}</div>
+      <div>
+        <button class="add-btn" onclick="addToPortfolio('${stock.companyName}', '${stock.ticker}', '${stock.currentPrice}')">Add</button>
+      </div>
+    `;
+    
+    stockContainer.appendChild(row);
+  });
+}
+
+const searchBtn = document.getElementById('searchBtn');
+const searchInput = document.getElementById('stockSearchInput');
+const searchIconSvg = document.getElementById('searchIconSvg');
+
+searchBtn.addEventListener('click', function () {
+  // 变蓝色
+  searchIconSvg.querySelector('circle').setAttribute('stroke', '#165DFF');
+  searchIconSvg.querySelector('line').setAttribute('stroke', '#165DFF');
+  searchBtn.classList.add('active'); // 边框和底色变蓝
+
+  // 筛选
+  const keyword = searchInput.value.trim().toLowerCase();
+  const filtered = allStocks.filter(stock =>
+    stock.companyName.toLowerCase().includes(keyword) ||
+    stock.ticker.toLowerCase().includes(keyword)
+  );
+  renderStocks(filtered);
+
+  // 0.6秒后恢复
+  setTimeout(() => {
+    searchIconSvg.querySelector('circle').setAttribute('stroke', '#888');
+    searchIconSvg.querySelector('line').setAttribute('stroke', '#888');
+    searchBtn.classList.remove('active');
+  }, 600);
+});
+
+// 保持原有输入实时筛选功能
+// searchInput.addEventListener('input', function () {
+//   const keyword = this.value.trim().toLowerCase();
+//   const filtered = allStocks.filter(stock =>
+//     stock.companyName.toLowerCase().includes(keyword) ||
+//     stock.ticker.toLowerCase().includes(keyword)
+//   );
+//   renderStocks(filtered);
+// });
 
 // 页面加载时获取数据
 document.addEventListener('DOMContentLoaded', fetchAndRenderStocks);
