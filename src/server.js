@@ -2,6 +2,7 @@ import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import stocksRoute from './routes/stocksRoute.js';
+import { cacheService } from './services/cacheService.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -21,5 +22,20 @@ app.listen(port, () => {
 
 // 将根路径重定向到主页面
 app.get('/', (req, res) => {
-  res.redirect('/homepage.html'); // 重定向到/home路径
+  res.redirect('/homepage.html');
 });
+
+async function startServer() {
+  try {
+    await cacheService.initialize();
+ 
+    app.listen(port, () => {
+      console.log(`Server running at http://localhost:${port}`);
+    });
+  } catch (error) {
+    console.error('Server fail to start:', error);
+    process.exit(1); 
+  }
+}
+
+startServer();
