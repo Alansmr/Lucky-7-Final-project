@@ -1,6 +1,7 @@
 // routes/stocksRoute.js
 import express from 'express';
 import { getStockData } from '../services/stockService.js';
+import { getStockDataByName } from '../services/stockService.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
@@ -34,4 +35,14 @@ router.get('/api/stocks', async (req, res) => {
   }
 });
 
+//根据股票公司名字的详细信息接口
+router.get('/api/stocks/:name', async (req, res) => {
+  const name = req.params.name;
+  try {
+    const stockData = await getStockDataByName(name);
+    res.json(stockData);
+  } catch (error) {
+    res.status(500).json({ error: '获取股票数据失败' });
+  }
+});
 export default router;
