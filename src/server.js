@@ -18,3 +18,8 @@ app.use('/', stocksRoute);
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
 });
+
+// 将根路径重定向到主页面
+app.get('/', (req, res) => {
+  res.redirect('/homepage.html'); // 重定向到/home路径
+});
