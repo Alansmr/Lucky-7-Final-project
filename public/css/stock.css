@@ -288,6 +288,85 @@ body {
   background-color: #c0392b; /* 深红悬停 */
 }
 
+/* 弹窗里的卖出按钮样式 */
+.modal-sell-btn {
+  padding: 4px 16px;
+  background-color: #e74c3c; /* 红色按钮 */
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-left: auto;
+  margin-right: auto;
+  transition: background-color 0.3s;
+  font-size: 16px;
+  min-width: 64px;
+  max-width: 100px;
+  text-align: center;
+}
+
+.modal-sell-btn:hover {
+  background-color: #c0392b; /* 深红悬停 */
+}
+
+/* 统一所有按钮样式 */
+button,
+.add-btn,
+.sell-btn,
+.modal-buy-btn,
+.modal-sell-btn,
+.custom-popup button {
+  padding: 8px 18px;
+  background-color: #165DFF;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.2s;
+  min-width: 80px;
+  text-align: center;
+  font-family: 'Segoe UI', 'Arial', sans-serif;
+  font-weight: 500;
+  box-shadow: 0 1px 4px rgba(22,93,255,0.06);
+  margin: 0 4px;
+}
+
+button:hover,
+.add-btn:hover,
+.sell-btn:hover,
+.modal-buy-btn:hover,
+.modal-sell-btn:hover,
+.custom-popup button:hover {
+  background-color: #0E42D2;
+}
+
+/* 卖出按钮和弹窗卖出按钮用红色 */
+.sell-btn,
+.modal-sell-btn {
+  background-color: #e74c3c;
+}
+
+.sell-btn:hover,
+.modal-sell-btn:hover {
+  background-color: #c0392b;
+}
+
+/* 让弹窗按钮居中，宽高与外部按钮一致 */
+.modal-buy-btn,
+.modal-sell-btn {
+  display: block;
+  margin: 16px auto 0 auto;
+  width: 120px;      /* 与外部按钮宽度一致，可根据实际调整 */
+  height: 40px;      /* 与外部按钮高度一致，可根据实际调整 */
+  padding: 0;
+  font-size: 16px;
+  border-radius: 4px;
+  text-align: center;
+  font-family: 'Segoe UI', 'Arial', sans-serif;
+  font-weight: 500;
+}
+
 /* 涨跌颜色逻辑 */
 .red {
   color: #e74c3c; /* 红色 */
@@ -375,15 +454,7 @@ body {
   cursor: pointer;
 }
 
-#buyAmountInput {
-  padding: 8px;
-  font-size: 16px;
-  margin-bottom: 12px;
-  border: 1px solid #d4eeff; /* 浅蓝色边框 */
-  border-radius: 4px;
-  background-color: #f8fbff; /* 浅蓝背景 */
-}
-
+#buyAmountInput,
 #sellAmountInput {
   padding: 8px;
   font-size: 16px;
@@ -391,6 +462,7 @@ body {
   border: 1px solid #d4eeff; /* 浅蓝色边框 */
   border-radius: 4px;
   background-color: #f8fbff; /* 浅蓝背景 */
+  text-align: center;
 }
 
 .modal-error {
