@@ -15,41 +15,62 @@ function changeColorAndJump(element) {
   }, 300);
 }
 
-// 添加股票到投资组合
-function addToPortfolio(name, code, price) {
-  const portfolioList = document.getElementById('portfolioList');
-  const newItem = document.createElement('div');
-  newItem.className = 'portfolio-item';
-  newItem.setAttribute('data-price', price);
-  newItem.setAttribute('data-code', code);
-  // 默认持股数为0
-  newItem.setAttribute('data-shares', 0);
-newItem.innerHTML = `
-  <div class="nametag">
-    <strong>${name}</strong> (${code})
-  </div>
-  <div class="price">
-    Purchase Price: ${price}
-  </div>
-  <div class="portfolio-row">
-    <span class="portfolio-shares">Shares: <span class="shares-num">0</span></span>
-    <button class="sell-btn">Sell</button>
-  </div>
-`;
-  // 绑定卖出事件
-  newItem.querySelector('.sell-btn').onclick = function() {
-    showSellModal(newItem);
-  };
-  portfolioList.insertBefore(newItem, portfolioList.firstChild);
-
-  // 添加成功动画
-  newItem.style.backgroundColor = '#f0f9ff';
-  setTimeout(() => {
-    newItem.style.backgroundColor = '';
-  }, 1000);
-
-  updatePortfolioTotal();
+// 修改添加股票逻辑（弹出买入弹窗，插入数据）
+async function addToPortfolio(name, code, price) {
+  // 记录当前股票信息，供买入弹窗使用
+  window.currentBuyInfo = { name, code, price };
+  showBuyModal();
 }
+
+// 买入弹窗逻辑
+function showBuyModal() {
+  document.getElementById('buyModal').style.display = 'flex';
+  document.getElementById('buyAmountInput').value = '';
+  document.getElementById('modalError').textContent = '';
+}
+
+
+document.getElementById('modalCloseBtn').onclick = closeBuyModal;
+
+// 买入按钮点击事件
+document.getElementById('modalBuyBtn').onclick = async function() {
+  const val = document.getElementById('buyAmountInput').value.trim();
+  const errorDiv = document.getElementById('modalError');
+  if (!/^\d+$/.test(val) || val === '' || Number(val) === 0) {
+    errorDiv.textContent = 'Invalid value! Please try again.';
+    errorDiv.style.color = '#F53F3F';
+    return;
+  }
+  errorDiv.textContent = '';
+  const { name, code, price } = window.currentBuyInfo || {};
+  const share = Number(document.getElementById('buyAmountInput').value.trim());
+  console.log('准备发送:', { name, code, price, share });
+
+  try {
+    const res = await fetch('/api/holderinfo/add', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        companyname: name,
+        code,
+        price: Number(price),
+        share: Number(share),
+        buyorsale: true
+      })
+    });
+    const result = await res.json();
+    console.log('后端返回:', result);
+    if (!result.success) {
+      showPopup(result.message || 'Failed to add to portfolio!');
+      return;
+    }
+    showPopup('Added to portfolio!');
+    closeBuyModal();
+  } catch (err) {
+    showPopup('Network error, please try again.');
+  }
+};
+
 
 // 卖出弹窗逻辑
 function showSellModal(portfolioItem) {
@@ -129,8 +150,8 @@ function renderStocks(stocks) {
           ${stock.companyName}
         </a>
       </div>
-      <div>${stock.ticker}</div>
-      <div class="${priceClass}">${stock.currentPrice}</div>
+      <div class="ticker">${stock.ticker}</div>
+      <div class="${priceClass} current-price">${stock.currentPrice}</div>
       <div class="${priceClass}">${stock.increasePercent}</div>
       <div class="${priceClass}">${stock.increaseAmount}</div>
       <div>
@@ -168,16 +189,6 @@ searchBtn.addEventListener('click', function () {
   }, 600);
 });
 
-// 保持原有输入实时筛选功能
-// searchInput.addEventListener('input', function () {
-//   const keyword = this.value.trim().toLowerCase();
-//   const filtered = allStocks.filter(stock =>
-//     stock.companyName.toLowerCase().includes(keyword) ||
-//     stock.ticker.toLowerCase().includes(keyword)
-//   );
-//   renderStocks(filtered);
-// });
-
 // 页面加载时获取数据
 document.addEventListener('DOMContentLoaded', fetchAndRenderStocks);
 
@@ -191,60 +202,96 @@ function closeBuyModal() {
   document.getElementById('buyModal').style.display = 'none';
 }
 
-document.addEventListener('DOMContentLoaded', function() {
-  // 假设 add 按钮有 add-btn 类
-  document.body.addEventListener('click', function(e) {
-    if (e.target.classList.contains('add-btn')) {
-      // 获取股票 code
-      const row = e.target.closest('.table-row');
-      if (row) {
-        // 假设股票代码在第2个 <div>，可根据实际结构调整
-        const code = row.children[1].textContent.trim();
-        window.currentBuyCode = code;
-      }
-      showBuyModal();
-    }
-  });
+let currentBuyStock = null;
 
-  document.getElementById('modalCloseBtn').onclick = closeBuyModal;
-
-  document.getElementById('modalBuyBtn').onclick = function() {
-    const val = document.getElementById('buyAmountInput').value.trim();
-    const errorDiv = document.getElementById('modalError');
-    if (!/^\d+$/.test(val) || val === '' || Number(val) === 0) {
-      errorDiv.textContent = 'Invalid value!Please try again.';
-      errorDiv.style.color = '#F53F3F';
-      return;
-    }
-    const sharesToBuy = Number(val);
-    const code = window.currentBuyCode;
-    const item = document.querySelector(`.portfolio-item[data-code="${code}"]`);
-    if (item) {
-      const sharesNum = item.querySelector('.shares-num');
-      let currentShares = parseInt(sharesNum.textContent, 10) || 0;
-      const price = parseFloat(item.getAttribute('data-price'));
-      const totalCost = sharesToBuy * price;
-      if (userCash < totalCost) {
-        errorDiv.textContent = 'Insufficient cash!';
-        errorDiv.style.color = '#F53F3F';
-        return;
-      }
-      currentShares += sharesToBuy;
-      sharesNum.textContent = currentShares;
-      item.setAttribute('data-shares', currentShares);
-      userCash -= totalCost;
-      updateCashDisplay();
-    }
-    errorDiv.style.color = '#00B42A';
-    errorDiv.textContent = 'Buy in successfully!';
-    setTimeout(() => {
-      document.getElementById('buyModal').style.display = 'none';
-      errorDiv.textContent = '';
-    }, 1200);
-  };
-
-  updateCashDisplay();
+// 监听 add 按钮（假设表格行有 .add-btn 按钮）
+document.addEventListener('click', function(e) {
+  if (e.target.classList.contains('add-btn')) {
+    const row = e.target.closest('.table-row');
+    const name = row.children[0].textContent; // 第一列公司名
+    const code = row.children[1].textContent; // 第二列代码
+    const price = row.children[2].textContent; // 第三列价格
+    currentBuyStock = { name, code, price };
+    document.getElementById('buyModal').style.display = 'flex';
+    document.getElementById('buyAmountInput').value = '';
+    document.getElementById('modalError').textContent = '';
+  }
 });
+
+// 监听 Buy 按钮
+document.getElementById('modalBuyBtn').onclick = async function() {
+  const share = document.getElementById('buyAmountInput').value.trim();
+  if (!share || isNaN(share) || Number(share) <= 0) {
+    document.getElementById('modalError').textContent = '请输入有效的买入数量';
+    return;
+  }
+  const payload = {
+    companyname: currentBuyStock.name,
+    code: currentBuyStock.code,
+    price: currentBuyStock.price,
+    share,
+    buyorsale: true
+  };
+  try {
+    const res = await fetch('/api/holderinfo/add', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    const result = await res.json();
+    if (result.success) {
+      document.getElementById('buyModal').style.display = 'none';
+      addPortfolioItem(payload); // 更新左侧列表
+    } else {
+      document.getElementById('modalError').textContent = result.message || '买入失败';
+    }
+  } catch (err) {
+    document.getElementById('modalError').textContent = '网络错误';
+  }
+};
+
+
+// 添加到左侧投资组合
+function addPortfolioItem({ companyname, code, price, share }) {
+  const list = document.getElementById('portfolioList');
+  const item = document.createElement('div');
+  item.className = 'portfolio-item';
+  item.innerHTML = `
+    <div class="nametag">
+    <strong>${name}</strong> (${code})
+  </div>
+  <div class="price">
+    Purchase Price: ${price}
+  </div>
+  <div class="row">
+    <span class="portfolio-shares">Shares: <span class="shares-num">0</span></span>
+    <button class="sell-btn">Sell</button>
+  </div>  
+`;
+  list.appendChild(item);
+  updatePortfolioTotal();
+}
+
+// 更新总额
+// function updatePortfolioTotal() {
+//   const list = document.getElementById('portfolioList');
+//   let total = 0;
+//   list.querySelectorAll('.portfolio-item').forEach(item => {
+//     const text = item.querySelector('.portfolio-shares').textContent;
+//     const [share, price] = text.split('@').map(s => s.trim());
+//     total += Number(share) * Number(price);
+//   });
+//   document.getElementById('portfolioTotal').textContent = 'Total: ' + total.toFixed(2);
+// }
+function updatePortfolioTotal() {
+  const portfolioList = document.getElementById('portfolioList');
+  let total = 0;
+  portfolioList.querySelectorAll('.portfolio-item').forEach(item => {
+    const price = parseFloat(item.getAttribute('data-price'));
+    if (!isNaN(price)) total += price;
+  });
+  document.getElementById('portfolioTotal').textContent = 'Total: ' + total.toFixed(2);
+}
 
 let userCash = 10000; // 初始现金
 
@@ -255,4 +302,5 @@ function updateCashDisplay() {
 // 页面加载时初始化 cash 显示
 document.addEventListener('DOMContentLoaded', function() {
   updateCashDisplay();
+  // ...existing code...
 });

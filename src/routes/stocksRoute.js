@@ -15,7 +15,7 @@ const __dirname = path.dirname(__filename); // 得到 src/routes 目录
 const htmlPath = path.join(__dirname, '..', '..', 'public', 'stock.html');
 
 const supabaseUrl = 'https://zrtrmddtacmaeuzupodz.supabase.co';
-const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'; // 你的 Supabase Key
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpydHJtZGR0YWNtYWV1enVwb2R6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTM2ODM0MDcsImV4cCI6MjA2OTI1OTQwN30.EYs4NwSyhhqUXzx_5AfsGVUcICgwRS3MSY6CkHaqoqU'; // 你的 Supabase Key
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 router.get('/stocks', (req, res) => {
@@ -95,6 +95,26 @@ router.get('/company/:name', async (req, res) => {
   } catch (error) {
     res.status(500).send('服务器错误');
   }
+});
+
+// 添加投资组合接口（插入 holderinfo 表，code 不重复）
+router.post('/api/holderinfo/add', express.json(), async (req, res) => {
+  console.log('收到买入请求:', req.body); // 新增日志
+  const { companyname, code, price, share, buyorsale } = req.body;
+  if (!companyname || !code || !price || !share) {
+    return res.json({ success: false, message: '参数缺失' });
+  }
+
+  const { error: insertError } = await supabase
+    .from('holderinfo')
+    .insert([{ companyname, code, price, share, buyorsale }]);
+
+  if (insertError) {
+    console.error('插入失败:', insertError); // 新增日志
+    return res.json({ success: false, message: '插入失败' });
+  }
+
+  res.json({ success: true });
 });
 
 export default router;
