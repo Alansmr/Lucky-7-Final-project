@@ -25,10 +25,10 @@ function addToPortfolio(name, code, price) {
   // 默认持股数为0
   newItem.setAttribute('data-shares', 0);
 newItem.innerHTML = `
-  <div>
+  <div class="nametag">
     <strong>${name}</strong> (${code})
   </div>
-  <div class="portfolio-price">
+  <div class="price">
     Purchase Price: ${price}
   </div>
   <div class="portfolio-row">
