@@ -11,6 +11,9 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const port = 3000;
 
+// 解析 JSON 请求体
+app.use(express.json());
+
 // 提供静态文件服务
 app.use(express.static(path.join(__dirname, '..', 'public')));
 
