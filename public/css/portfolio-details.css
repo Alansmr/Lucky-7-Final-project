@@ -81,15 +81,14 @@
 
 
     .portfolio-item h3 {
-        font-size: 1.2rem;
+        font-size: 1.4rem;
         margin-bottom: 8px;
         color: #3498db;
         display: flex;
-        justify-content: space-between;
     }
 
     .portfolio-item .value {
-        font-size: 1.4rem;
+        font-size: 1.2rem;
         font-weight: 700;
         color: #2980b9;
     }
@@ -113,7 +112,6 @@
 
     .portfolio-item .details {
         display: flex;
-        justify-content: space-between;
         font-size: 0.9rem;
         color: #7f8c8d;
         margin-top: 10px;

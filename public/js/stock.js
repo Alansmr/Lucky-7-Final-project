@@ -258,13 +258,13 @@ function addPortfolioItem({ companyname, code, price, share }) {
   item.className = 'portfolio-item';
   item.innerHTML = `
     <div class="nametag">
-    <strong>${name}</strong> (${code})
+    <strong>${companyname}</strong> (${code})
   </div>
   <div class="price">
     Purchase Price: ${price}
   </div>
   <div class="row">
-    <span class="portfolio-shares">Shares: <span class="shares-num">0</span></span>
+    <span class="portfolio-shares">Shares: <span class="shares-num"> ${share}</span></span>
     <button class="sell-btn">Sell</button>
   </div>  
 `;
@@ -273,7 +273,7 @@ function addPortfolioItem({ companyname, code, price, share }) {
 }
 
 // 更新总额
-// function updatePortfolioTotal() {
+// function updatePortfolioTotal() {F
 //   const list = document.getElementById('portfolioList');
 //   let total = 0;
 //   list.querySelectorAll('.portfolio-item').forEach(item => {
