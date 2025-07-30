@@ -205,13 +205,6 @@
         padding: 10px;
     }
 
-    .performance-stats {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 15px;
-        margin-top: 25px;
-    }
-
     .stat-card {
         background: #f8fbff;
         border-radius: 12px;
@@ -334,3 +327,32 @@
         font-size: 0.8rem;
         color: #7f8c8d;
     }
+    
+/* 新增的投资按钮样式 */
+.investment-button {
+    background: linear-gradient(to right, #3498db, #2980b9);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 15px 20px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-top: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(52, 152, 219, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.investment-button:hover {
+    background: linear-gradient(to right, #2980b9, #2573a7);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(52, 152, 219, 0.4);
+}
+
+.investment-button:active {
+    transform: translateY(0);
+}

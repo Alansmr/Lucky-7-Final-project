@@ -21,5 +21,5 @@ app.listen(port, () => {
 
 // 将根路径重定向到主页面
 app.get('/', (req, res) => {
-  res.redirect('/homepage.html'); // 重定向到/home路径
+  res.redirect('/portfolio-details.html');
 });
