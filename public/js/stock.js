@@ -59,19 +59,22 @@ async function addToPortfolio(name, code, price) {
   const newItem = document.createElement('div');
   newItem.className = 'portfolio-item';
   newItem.setAttribute('data-price', price);
+  newItem.setAttribute('data-code', code);
+  // 默认持股数为0
+  newItem.setAttribute('data-shares', 0);
   newItem.innerHTML = `
     <div>
       <strong>${name}</strong> (${code})
     </div>
     <div>
       Purchase Price: ${price}
-      <button class="delete-btn">Delete</button>
+      <span class="portfolio-shares">Shares: <span class="shares-num">0</span></span>
+      <button class="sell-btn">Sell</button>
     </div>
   `;
-  // 绑定删除事件
-  newItem.querySelector('.delete-btn').onclick = function() {
-    portfolioList.removeChild(newItem);
-    updatePortfolioTotal();
+  // 绑定卖出事件
+  newItem.querySelector('.sell-btn').onclick = function() {
+    showSellModal(newItem);
   };
   portfolioList.insertBefore(newItem, portfolioList.firstChild);
 
@@ -82,6 +85,38 @@ async function addToPortfolio(name, code, price) {
   }, 1000);
 
   updatePortfolioTotal();
+}
+
+// 卖出弹窗逻辑
+function showSellModal(portfolioItem) {
+  document.getElementById('sellModal').style.display = 'flex';
+  document.getElementById('sellAmountInput').value = '';
+  document.getElementById('modalErrorSell').textContent = '';
+  // 记录当前操作的 portfolioItem
+  document.getElementById('modalSellBtn').onclick = function() {
+    const val = document.getElementById('sellAmountInput').value.trim();
+    const errorDiv = document.getElementById('modalErrorSell');
+    const sharesNumSpan = portfolioItem.querySelector('.shares-num');
+    let currentShares = parseInt(sharesNumSpan.textContent, 10) || 0;
+    if (!/^\d+$/.test(val) || val === '' || Number(val) === 0 || Number(val) > currentShares) {
+      errorDiv.textContent = 'Invalid value!Please try again.';
+      errorDiv.style.color = '#F53F3F';
+      return;
+    }
+    // 卖出成功
+    currentShares -= Number(val);
+    sharesNumSpan.textContent = currentShares;
+    portfolioItem.setAttribute('data-shares', currentShares);
+    errorDiv.style.color = '#00B42A';
+    errorDiv.textContent = 'Sell successfully!';
+    updatePortfolioTotal();
+    setTimeout(closeSellModal, 1200);
+  };
+  document.getElementById('modalCloseBtnSell').onclick = closeSellModal;
+}
+
+function closeSellModal() {
+  document.getElementById('sellModal').style.display = 'none';
 }
 
 function updatePortfolioTotal() {
@@ -181,3 +216,58 @@ searchBtn.addEventListener('click', function () {
 
 // 页面加载时获取数据
 document.addEventListener('DOMContentLoaded', fetchAndRenderStocks);
+
+function showBuyModal() {
+  document.getElementById('buyModal').style.display = 'flex';
+  document.getElementById('buyAmountInput').value = '';
+  document.getElementById('modalError').textContent = '';
+}
+
+function closeBuyModal() {
+  document.getElementById('buyModal').style.display = 'none';
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  // 假设 add 按钮有 add-btn 类
+  document.body.addEventListener('click', function(e) {
+    if (e.target.classList.contains('add-btn')) {
+      // 获取股票 code
+      const row = e.target.closest('.table-row');
+      if (row) {
+        // 假设股票代码在第2个 <div>，可根据实际结构调整
+        const code = row.children[1].textContent.trim();
+        window.currentBuyCode = code;
+      }
+      showBuyModal();
+    }
+  });
+
+  document.getElementById('modalCloseBtn').onclick = closeBuyModal;
+
+  document.getElementById('modalBuyBtn').onclick = function() {
+    const val = document.getElementById('buyAmountInput').value.trim();
+    const errorDiv = document.getElementById('modalError');
+    if (!/^\d+$/.test(val) || val === '' || Number(val) === 0) {
+      errorDiv.textContent = 'Invalid value!Please try again.';
+      errorDiv.style.color = '#F53F3F';
+      return;
+    }
+    // 假设当前正在买入的股票 code 存在 window.currentBuyCode
+    const code = window.currentBuyCode;
+    // 查找 portfolio-item
+    const item = document.querySelector(`.portfolio-item[data-code="${code}"]`);
+    if (item) {
+      const sharesNum = item.querySelector('.shares-num');
+      let currentShares = parseInt(sharesNum.textContent, 10) || 0;
+      currentShares += Number(val);
+      sharesNum.textContent = currentShares;
+      item.setAttribute('data-shares', currentShares);
+    }
+    errorDiv.style.color = '#00B42A';
+    errorDiv.textContent = 'Buy in successfully!';
+    setTimeout(() => {
+      document.getElementById('buyModal').style.display = 'none';
+      errorDiv.textContent = '';
+    }, 1200);
+  };
+});
