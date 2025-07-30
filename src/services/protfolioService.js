@@ -132,5 +132,51 @@ function getCompanyNameByCode(code) {
 }
 
 export async function getAssetDetails(){
-  //return protfolio networth and total assets
+  //return protfolio networth and total assets (total assets = networth + cash)   
+  try {
+    const portfolioData = await getPortfolioData();
+    const netWorth = portfolioData.reduce((sum, item) => sum + parseFloat(item.totalValue), 0);
+    const cash = cacheService.userCash;
+    const totalAssets = netWorth + cash;
+
+    return {
+      netWorth: netWorth.toFixed(2),
+      totalAssets: totalAssets.toFixed(2),
+      cash: cash.toFixed(2)
+    };
+  } catch (error) {
+    console.error('Error fetching asset details:', error);
+    throw error;
+  }
+}
+
+export async function getPortfolioComposition(){
+  //return the percentage composition of each type, total shares of each type and amount of each type in the portfolio
+  //type can be 'Technology', 'BioTechnology', 'Finance'
+  try {
+    const portfolioData = await getPortfolioData();
+    const composition = {
+      Technology: { totalShares: 0, totalAmount: 0 },
+      BioTechnology: { totalShares: 0, totalAmount: 0 },
+      Finance: { totalShares: 0, totalAmount: 0 }
+    };
+
+    portfolioData.forEach(item => {
+      if (item.type === 'Technology') {
+        composition.Technology.totalShares += item.share;
+        composition.Technology.totalAmount += parseFloat(item.totalValue);
+      } else if (item.type === 'Biotechnology') {
+        composition.BioTechnology.totalShares += item.share;
+        composition.BioTechnology.totalAmount += parseFloat(item.totalValue);
+      } else if (item.type === 'Finance') {
+        composition.Finance.totalShares += item.share;
+        composition.Finance.totalAmount += parseFloat(item.totalValue);
+      }
+    });
+
+    return portfolioData;
+  } catch (error) {
+    console.error('Error fetching portfolio composition:', error);
+    throw error;
+  }
 }
