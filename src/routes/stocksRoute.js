@@ -101,31 +101,18 @@ router.get('/company/:name', async (req, res) => {
 
 // 添加投资组合接口（插入 holderinfo 表，code 不重复）
 router.post('/api/holderinfo/add', express.json(), async (req, res) => {
-  const { companyname, code, price } = req.body;
-  if (!companyname || !code || !price) {
+  console.log('收到买入请求:', req.body); // 新增日志
+  const { companyname, code, price, share, buyorsale } = req.body;
+  if (!companyname || !code || !price || !share) {
     return res.json({ success: false, message: '参数缺失' });
   }
 
-  // 1. 检查 code 是否已存在
-  const { data: exists, error: existsError } = await supabase
-    .from('holderinfo')
-    .select('code')
-    .eq('code', code)
-    .limit(1);
-
-  if (existsError) {
-    return res.json({ success: false, message: '数据库查询失败' });
-  }
-  if (exists && exists.length > 0) {
-    return res.json({ success: false, message: 'Stock already exists in portfolio!' });
-  }
-
-  // 2. 插入新记录
   const { error: insertError } = await supabase
     .from('holderinfo')
-    .insert([{companyname, code, price}]);
+    .insert([{ companyname, code, price, share, buyorsale }]);
 
   if (insertError) {
+    console.error('插入失败:', insertError); // 新增日志
     return res.json({ success: false, message: '插入失败' });
   }
 

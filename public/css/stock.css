@@ -271,7 +271,39 @@ body {
   color: #86909C;
 }
 
-/* 模态框样式 */
+/* 重复插入提醒弹窗 */
+.custom-popup {
+  position: fixed;
+  left: 50%;
+  top: 30%;
+  transform: translate(-50%, -50%);
+  background: #fff;
+  border: 2px solid #165DFF;
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(22,93,255,0.15);
+  padding: 24px 32px;
+  z-index: 9999;
+  display: none;
+  font-size: 18px;
+  color: #333;
+  text-align: center;
+}
+
+.custom-popup button {
+  margin-top: 18px;
+  padding: 6px 18px;
+  background: #165DFF;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.custom-popup button:hover {
+  background: #0E42D2;
+}
+
+/* 购买数量输入框 */
 .modal {
   position: fixed;
   top: 0;
