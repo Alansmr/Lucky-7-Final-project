@@ -291,15 +291,26 @@ function updateCashDisplay() {
 // 页面加载时初始化 cash 显示
 document.addEventListener('DOMContentLoaded', function() {
   updateCashDisplay();
-  const navItems = document.querySelectorAll('.nav-item');
-  if (navItems.length > 0) {
-    navItems[0].addEventListener('click', function() {
-      window.location.href = 'portfolio-details.html';
+    const navItems = document.querySelectorAll('.nav-item');
+  
+  navItems.forEach(item => {
+    item.addEventListener('click', function() {
+      // 移除所有导航项的active类
+      navItems.forEach(navItem => {
+        navItem.classList.remove('active');
+      });
+      
+      // 为当前点击的导航项添加active类
+      this.classList.add('active');
+      
+      // 根据点击的导航项切换页面内容或执行其他操作
+      if (this.textContent === 'My Financial Portfolio') {
+        // 切换到投资组合页面
+        window.location.href = 'portfolio-details.html';
+      } else if (this.textContent === 'Stock Investment') {
+        // 切换到股票投资页面
+        window.location.href = 'stock.html';
+      }
     });
-  }
-  if (navItems.length > 1) {
-    navItems[1].addEventListener('click', function() {
-      window.location.href = 'stock.html';
-    });
-  }
+  });
 });

@@ -26,35 +26,36 @@ body {
   flex-direction: row;
   align-items: flex-start;
   position: relative;
+  margin-top: 52px;
+   height: calc(100vh - 52px);
 }
 
 
 /* 工具栏左上角固定，高度与左侧区域一致 */
 .nav {
   width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
   display: flex;
   flex-direction: row;
   border: none;
   background: none;
-  margin-bottom: 18px;
-  margin-top: 0;
   align-items: stretch;
+  padding: 0 16px;
 }
 
 .nav-item {
   flex: 1;
   text-align: center;
   padding: 16px 0;
-  border-radius: 8px 8px 0 0;
+  border-radius: 0;
   background: #f8fbff;
-  margin-right: 6px;
-  margin-bottom: 0;
+  margin-right: 0;
   font-weight: 600;
   color: #165DFF;
   cursor: pointer;
   transition: background 0.2s, color 0.2s;
 }
-
 .nav-item:last-child {
   margin-right: 0;
 }
@@ -62,6 +63,17 @@ body {
 .nav-item.active {
   background: #165DFF;
   color: #fff;
+  font-weight: bold; /* 加粗当前选中的导航项 */
+}
+
+.nav-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: #fff;
+  z-index: 1000;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 /* 主内容区布局 - 占满整个页面宽度 */
@@ -78,7 +90,8 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  height: 100vh;
+  height: 100%; /* 改为百分比高度 */
+  overflow-y: auto;
 }
 
 .portfolio-list {
@@ -167,8 +180,9 @@ body {
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  height: 100%;
   overflow-x: auto;
+  overflow-y: auto;
 }
 
 /* 搜索栏样式 */
@@ -555,4 +569,3 @@ button:hover,
     height: auto;
   }
 }
-
