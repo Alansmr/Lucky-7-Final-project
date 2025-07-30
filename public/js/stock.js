@@ -222,7 +222,7 @@ document.addEventListener('click', function(e) {
 document.getElementById('modalBuyBtn').onclick = async function() {
   const share = document.getElementById('buyAmountInput').value.trim();
   if (!share || isNaN(share) || Number(share) <= 0) {
-    document.getElementById('modalError').textContent = '请输入有效的买入数量';
+    document.getElementById('modalError').textContent = 'Please enter valid value.';
     return;
   }
   const payload = {
@@ -243,10 +243,10 @@ document.getElementById('modalBuyBtn').onclick = async function() {
       document.getElementById('buyModal').style.display = 'none';
       addPortfolioItem(payload); // 更新左侧列表
     } else {
-      document.getElementById('modalError').textContent = result.message || '买入失败';
+      document.getElementById('modalError').textContent = result.message || 'Failed to buy stock.';
     }
   } catch (err) {
-    document.getElementById('modalError').textContent = '网络错误';
+    document.getElementById('modalError').textContent = 'Network error.';
   }
 };
 
@@ -256,24 +256,31 @@ function addPortfolioItem({ companyname, code, price, share }) {
   const list = document.getElementById('portfolioList');
   const item = document.createElement('div');
   item.className = 'portfolio-item';
+  item.setAttribute('data-price', price);
+  item.setAttribute('data-code', code);
+  item.setAttribute('data-shares', share);
   item.innerHTML = `
     <div class="nametag">
-    <strong>${companyname}</strong> (${code})
-  </div>
-  <div class="price">
-    Purchase Price: ${price}
-  </div>
-  <div class="row">
-    <span class="portfolio-shares">Shares: <span class="shares-num"> ${share}</span></span>
-    <button class="sell-btn">Sell</button>
-  </div>  
-`;
+      <strong>${companyname}</strong> (${code})
+    </div>
+    <div class="price">
+      Purchase Price: ${price}
+    </div>
+    <div class="row">
+      <span class="shares">Shares: <span class="shares-num">${share}</span></span>
+      <button class="sell-btn">Sell</button>
+    </div>
+  `;
+  // 绑定卖出弹窗事件
+  item.querySelector('.sell-btn').onclick = function() {
+    showSellModal(item);
+  };
   list.appendChild(item);
   updatePortfolioTotal();
 }
 
 // 更新总额
-// function updatePortfolioTotal() {F
+// function updatePortfolioTotal()
 //   const list = document.getElementById('portfolioList');
 //   let total = 0;
 //   list.querySelectorAll('.portfolio-item').forEach(item => {
