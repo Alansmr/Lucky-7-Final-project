@@ -24,16 +24,18 @@ function addToPortfolio(name, code, price) {
   newItem.setAttribute('data-code', code);
   // 默认持股数为0
   newItem.setAttribute('data-shares', 0);
-  newItem.innerHTML = `
-    <div>
-      <strong>${name}</strong> (${code})
-    </div>
-    <div>
-      Purchase Price: ${price}
-      <span class="portfolio-shares">Shares: <span class="shares-num">0</span></span>
-      <button class="sell-btn">Sell</button>
-    </div>
-  `;
+newItem.innerHTML = `
+  <div>
+    <strong>${name}</strong> (${code})
+  </div>
+  <div class="portfolio-price">
+    Purchase Price: ${price}
+  </div>
+  <div class="portfolio-row">
+    <span class="portfolio-shares">Shares: <span class="shares-num">0</span></span>
+    <button class="sell-btn">Sell</button>
+  </div>
+`;
   // 绑定卖出事件
   newItem.querySelector('.sell-btn').onclick = function() {
     showSellModal(newItem);
@@ -214,16 +216,24 @@ document.addEventListener('DOMContentLoaded', function() {
       errorDiv.style.color = '#F53F3F';
       return;
     }
-    // 假设当前正在买入的股票 code 存在 window.currentBuyCode
+    const sharesToBuy = Number(val);
     const code = window.currentBuyCode;
-    // 查找 portfolio-item
     const item = document.querySelector(`.portfolio-item[data-code="${code}"]`);
     if (item) {
       const sharesNum = item.querySelector('.shares-num');
       let currentShares = parseInt(sharesNum.textContent, 10) || 0;
-      currentShares += Number(val);
+      const price = parseFloat(item.getAttribute('data-price'));
+      const totalCost = sharesToBuy * price;
+      if (userCash < totalCost) {
+        errorDiv.textContent = 'Insufficient cash!';
+        errorDiv.style.color = '#F53F3F';
+        return;
+      }
+      currentShares += sharesToBuy;
       sharesNum.textContent = currentShares;
       item.setAttribute('data-shares', currentShares);
+      userCash -= totalCost;
+      updateCashDisplay();
     }
     errorDiv.style.color = '#00B42A';
     errorDiv.textContent = 'Buy in successfully!';
@@ -232,4 +242,17 @@ document.addEventListener('DOMContentLoaded', function() {
       errorDiv.textContent = '';
     }, 1200);
   };
+
+  updateCashDisplay();
+});
+
+let userCash = 10000; // 初始现金
+
+function updateCashDisplay() {
+  document.getElementById('portfolioCash').textContent = `Cash: $${userCash.toFixed(2)}`;
+}
+
+// 页面加载时初始化 cash 显示
+document.addEventListener('DOMContentLoaded', function() {
+  updateCashDisplay();
 });
