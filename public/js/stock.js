@@ -257,18 +257,17 @@ function addPortfolioItem({ companyname, code, price, share }) {
   const item = document.createElement('div');
   item.className = 'portfolio-item';
   item.innerHTML = `
-      <div>
-        <strong>${companyname}</strong> (${code})
-      </div>
-      <div class="portfolio-price">
-        Purchase Price: ${price}
-      </div>
-      <div class="portfolio-row">
-        <span class="portfolio-shares">Shares: <span class="shares-num">${share}</span></span>
-        <button class="sell-btn">Sell</button>
-      </div>
-    `;
-
+  <div>
+    <strong>${companyname}</strong> (${code})
+  </div>
+  <div class="portfolio-price">
+    Purchase Price: ${price}
+  </div>
+  <div class="portfolio-row">
+    <span class="portfolio-shares">Shares: <span class="shares-num">${share}</span></span>
+    <button class="sell-btn">Sell</button>
+  </div>
+`;
   list.appendChild(item);
   updatePortfolioTotal();
 }
