@@ -79,10 +79,6 @@
         box-shadow: 0 5px 15px rgba(52, 152, 219, 0.15);
     }
 
-    .portfolio-item.active {
-        border-left: 4px solid #3498db;
-        background: #e3f2ff;
-    }
 
     .portfolio-item h3 {
         font-size: 1.2rem;

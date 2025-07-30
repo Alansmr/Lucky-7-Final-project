@@ -11,15 +11,16 @@ class CacheService {
     this.cacheTTL = 24 * 60 * 60 * 1000;  
   }
 
-  // 格式化日期为 'YYYY-MM-DD 01:30:00'
-  formatDate(date) {
+  formatDateTime(date) {
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
-    return `${year}-${month}-${day} 01:30:00`;
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const seconds = String(date.getSeconds()).padStart(2, '0');
+    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
   }
 
-  // 从数据库获取股票数据（原 getStockData 逻辑）
   async fetchStockDataFromDB() {
     try {
       // 1. 获取每个股票的最新记录
@@ -39,60 +40,76 @@ class CacheService {
         }
       });
 
-      // 3. 获取所有股票代码
+      const previousDayPrices = {}; 
       const tickers = Object.keys(latestRecords);
 
-      // 4. 批量获取每个股票当天01:30:00的开盘价
-      const openingPrices = {};
       for (const ticker of tickers) {
-        const latestDate = new Date(latestRecords[ticker].timestamp);
-        const openTimeStart = new Date(latestDate.getFullYear(), latestDate.getMonth(), latestDate.getDate(), 1, 30, 0);
-        const startStr = this.formatDate(openTimeStart);
+        const latestRecord = latestRecords[ticker];
+        const latestDate = new Date(latestRecord.timestamp); 
 
-        const { data: openData, error: openError } = await supabase
+        // 计算“上一天”的时间范围：前一天00:00:00 至 23:59:59
+        const previousDay = new Date(latestDate);
+        // 减去一天
+        previousDay.setDate(latestDate.getDate() - 1);  
+
+        // 上一天开始时间：00:00:00
+        const prevDayStart = new Date(previousDay);
+        prevDayStart.setHours(0, 0, 0, 0);
+        // 上一天结束时间：23:59:59
+        const prevDayEnd = new Date(previousDay);
+        prevDayEnd.setHours(23, 59, 59, 999);
+
+        const startStr = this.formatDateTime(prevDayStart);
+        const endStr = this.formatDateTime(prevDayEnd);
+
+        // 查询上一天范围内的记录，取最新一条（按时间倒序）
+        const { data: prevData, error: prevError } = await supabase
           .from('stackinfo')
-          .select('open')
+          .select('close')  // 假设上一天的价格用收盘价（可根据实际调整）
           .eq('ticker', ticker)
-          .eq('timestamp', startStr)
-          .order('timestamp', { ascending: true })
-          .limit(1);
+          .gte('timestamp', startStr)  // 大于等于上一天00:00:00
+          .lte('timestamp', endStr)    // 小于等于上一天23:59:59
+          .order('timestamp', { ascending: false })  // 最新的在前
+          .limit(1);  // 只取一条
 
-        if (openError) {
-          console.warn(`获取${ticker}开盘价失败:`, openError);
-          openingPrices[ticker] = null;
+        if (prevError) {
+          console.warn(`获取${ticker}上一天价格失败:`, prevError);
+          previousDayPrices[ticker] = null;
           continue;
         }
 
-        openingPrices[ticker] = openData.length > 0 
-          ? openData[0].open 
-          : latestRecords[ticker].close;
+        // 保存上一天的价格（若无上一天数据，用当前价格兜底）
+        previousDayPrices[ticker] = prevData.length > 0 
+          ? prevData[0].close 
+          : latestRecord.close;
       }
 
-      // 5. 计算涨跌幅
+      // 4. 计算涨跌幅（当前收盘价 - 上一天价格）
       const result = Object.values(latestRecords).map(stock => {
-        const openPrice = openingPrices[stock.ticker];
-        const closePrice = stock.close;
+        const prevDayPrice = previousDayPrices[stock.ticker];
+        const currentClose = stock.close;
 
-        if (openPrice === null || isNaN(openPrice)) {
+        if (prevDayPrice === null || isNaN(prevDayPrice)) {
           return {
             companyName: this.getCompanyNameByTicker(stock.ticker),
             ticker: stock.ticker,
-            currentPrice: closePrice.toFixed(2),
-            openPrice: 'N/A',
+            currentPrice: currentClose.toFixed(2),
+            previousDayPrice: 'N/A',  
             increasePercent: 'N/A',
             increaseAmount: 'N/A',
             lastUpdated: new Date(stock.timestamp).toLocaleString()
           };
         }
 
-        const increaseAmount = (closePrice - openPrice).toFixed(2);
-        const increasePercent = ((increaseAmount / openPrice) * 100).toFixed(2);
+        // 计算涨幅（金额和百分比）
+        const increaseAmount = (currentClose - prevDayPrice).toFixed(2);
+        const increasePercent = ((increaseAmount / prevDayPrice) * 100).toFixed(2);
 
         return {
           companyName: this.getCompanyNameByTicker(stock.ticker),
           ticker: stock.ticker,
-          currentPrice: closePrice.toFixed(2),
-          openPrice: openPrice.toFixed(2),
+          currentPrice: currentClose.toFixed(2),
+          previousDayPrice: prevDayPrice.toFixed(2),
           increasePercent: `${increasePercent}%`,
           increaseAmount: increaseAmount > 0 ? `+${increaseAmount}` : increaseAmount,
           lastUpdated: new Date(stock.timestamp).toLocaleString()
@@ -146,10 +163,42 @@ class CacheService {
 
   getCompanyNameByTicker(ticker) {
     const tickerMap = {
-      'AAPL': 'Apple Inc.',
-      'AMZN': 'Amazon.com Inc.',
-      'TSLA': 'Tesla Inc.',
-      'C': 'Citigroup Inc.',
+    // 科技板块（Technology）
+    'AAPL': 'Apple Inc.',
+    'MSFT': 'Microsoft Corporation',
+    'GOOGL': 'Alphabet Inc. (Google)',
+    'AMZN': 'Amazon.com Inc.',
+    'NVDA': 'NVIDIA Corporation',
+    'META': 'Meta Platforms Inc. (Facebook)',
+    'TSLA': 'Tesla Inc.',
+    'ADBE': 'Adobe Inc.',
+    'CRM': 'Salesforce Inc.',
+    'AMD': 'Advanced Micro Devices',
+
+    // 生物医药板块（Biotech/Pharma）
+    'MRNA': 'Moderna Inc.',
+    'PFE': 'Pfizer Inc.',
+    'JNJ': 'Johnson & Johnson',
+    'REGN': 'Regeneron Pharmaceuticals',
+    'VRTX': 'Vertex Pharmaceuticals',
+    'GILD': 'Gilead Sciences',
+    'BIIB': 'Biogen Inc.',
+    'AMGN': 'Amgen Inc.',
+    'ILMN': 'Illumina Inc.',
+    'SRPT': 'Sarepta Therapeutics',
+
+    // 金融板块（Financial Services）
+    'JPM': 'JPMorgan Chase & Co.',
+    'BAC': 'Bank of America',
+    'GS': 'Goldman Sachs Group',
+    'MS': 'Morgan Stanley',
+    'V': 'Visa Inc.',
+    'MA': 'Mastercard Inc.',
+    'PYPL': 'PayPal Holdings',
+    'HOOD': 'Robinhood Markets',
+    'BLK': 'BlackRock Inc.',
+    'AXP': 'American Express',
+    'C': 'Citigroup Inc.',
     };
     return tickerMap[ticker] || ticker;
   }
