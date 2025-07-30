@@ -44,3 +44,17 @@ function renderPortfolioList(portfolios) {
     portfolioList.appendChild(portfolioItem);
   });
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+  const navItems = document.querySelectorAll('.nav-item');
+  if (navItems.length > 0) {
+    navItems[0].addEventListener('click', function() {
+      window.location.href = 'portfolio-details.html';
+    });
+  }
+  if (navItems.length > 1) {
+    navItems[1].addEventListener('click', function() {
+      window.location.href = 'stock.html';
+    });
+  }
+});
