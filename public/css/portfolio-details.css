@@ -1,0 +1,336 @@
+* {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+        background: linear-gradient(135deg, #f0f9ff, #e6f7ff);
+        color: #2c3e50;
+        min-height: 100vh;
+        padding: 20px;
+    }
+
+    .main-container {
+        display: flex;
+        max-width: 1600px;
+        margin: 0 auto;
+        gap: 20px;
+        height: calc(100vh - 40px);
+    }
+
+    /* 左侧投资组合区域 - 亮色系 */
+    .portfolio-container {
+        width: 33%;
+        background: #ffffff;
+        border-radius: 16px;
+        padding: 25px;
+        box-shadow: 0 8px 20px rgba(173, 216, 230, 0.25);
+        border: 1px solid #e0f0ff;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+    }
+
+    .portfolio-header {
+        font-size: 1.8rem;
+        font-weight: 700;
+        margin-bottom: 25px;
+        padding-bottom: 15px;
+        border-bottom: 2px solid #e0f7ff;
+        color: #2980b9;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .portfolio-header:hover {
+        color: #3498db;
+        transform: translateX(5px);
+    }
+
+    .portfolio-header i {
+        font-size: 1.5rem;
+    }
+
+    .portfolio-list {
+        flex-grow: 1;
+        overflow-y: auto;
+        padding-right: 10px;
+    }
+
+    .portfolio-item {
+        background: #f8fbff;
+        border-radius: 12px;
+        padding: 18px;
+        margin-bottom: 15px;
+        transition: all 0.3s ease;
+        border-left: 4px solid #a8d8ff;
+        cursor: pointer;
+        box-shadow: 0 2px 8px rgba(168, 216, 255, 0.15);
+    }
+
+    .portfolio-item:hover {
+        background: #edf7ff;
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(52, 152, 219, 0.15);
+    }
+
+    .portfolio-item.active {
+        border-left: 4px solid #3498db;
+        background: #e3f2ff;
+    }
+
+    .portfolio-item h3 {
+        font-size: 1.2rem;
+        margin-bottom: 8px;
+        color: #3498db;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .portfolio-item .value {
+        font-size: 1.4rem;
+        font-weight: 700;
+        color: #2980b9;
+    }
+
+    .portfolio-item .change {
+        font-size: 0.9rem;
+        padding: 3px 8px;
+        border-radius: 12px;
+        margin-left: 10px;
+    }
+
+    .change.positive {
+        background: rgba(46, 204, 113, 0.15);
+        color: #27ae60;
+    }
+
+    .change.negative {
+        background: rgba(231, 76, 60, 0.15);
+        color: #e74c3c;
+    }
+
+    .portfolio-item .details {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.9rem;
+        color: #7f8c8d;
+        margin-top: 10px;
+    }
+
+    .portfolio-total {
+        background: #f1f9ff;
+        border-radius: 12px;
+        padding: 20px;
+        margin-top: 20px;
+        border-top: 2px solid #d4eeff;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 1.3rem;
+        box-shadow: 0 2px 10px rgba(200, 230, 255, 0.2);
+    }
+
+    .portfolio-total .value {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: #2980b9;
+    }
+
+    /* 右侧详细信息区域 - 亮色系 */
+    .details-container {
+        width: 67%;
+        background: #ffffff;
+        border-radius: 16px;
+        padding: 30px;
+        box-shadow: 0 8px 20px rgba(200, 230, 255, 0.3);
+        border: 1px solid #e0f0ff;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .details-header {
+        padding-bottom: 20px;
+        border-bottom: 2px solid #d4eeff;
+        margin-bottom: 25px;
+    }
+
+    .details-header h2 {
+        font-size: 2rem;
+        color: #2980b9;
+        margin-bottom: 10px;
+    }
+
+    .details-header .info {
+        display: flex;
+        gap: 30px;
+        color: #7f8c8d;
+    }
+
+    .charts-container {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+        flex-grow: 1;
+    }
+
+    .chart-card {
+        background: #f8fbff;
+        border-radius: 16px;
+        padding: 20px;
+        box-shadow: 0 2px 10px rgba(200, 230, 255, 0.2);
+        border: 1px solid #e0f7ff;
+    }
+
+    .chart-card h3 {
+        color: #3498db;
+        margin-bottom: 15px;
+        font-size: 1.2rem;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .chart-container {
+        height: 250px;
+        position: relative;
+        background: #ffffff;
+        border-radius: 12px;
+        border: 1px solid #e0f0ff;
+        padding: 10px;
+    }
+
+    .performance-stats {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 15px;
+        margin-top: 25px;
+    }
+
+    .stat-card {
+        background: #f8fbff;
+        border-radius: 12px;
+        padding: 20px;
+        text-align: center;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 8px rgba(168, 216, 255, 0.15);
+        border: 1px solid #e0f7ff;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-5px);
+        background: #edf7ff;
+        box-shadow: 0 5px 15px rgba(52, 152, 219, 0.15);
+    }
+
+    .stat-card .value {
+        font-size: 1.8rem;
+        font-weight: 700;
+        margin: 10px 0;
+        color: #2980b9;
+    }
+
+    .stat-card .label {
+        color: #7f8c8d;
+        font-size: 0.9rem;
+    }
+
+    .stat-card .change {
+        font-size: 0.9rem;
+        margin-top: 5px;
+        font-weight: 500;
+    }
+
+    /* 滚动条样式 */
+    ::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: rgba(224, 247, 255, 0.5);
+        border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: #a8d8ff;
+        border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: #85c1ff;
+    }
+
+    /* 响应式设计 */
+    @media (max-width: 1200px) {
+        .main-container {
+            flex-direction: column;
+            height: auto;
+        }
+
+        .portfolio-container, .details-container {
+            width: 100%;
+        }
+
+        .charts-container {
+            grid-template-columns: 1fr;
+        }
+
+        .performance-stats {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    /* 占位图表样式 */
+    .chart-placeholder {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+        color: #7f8c8d;
+    }
+
+    .chart-grid {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 10px;
+    }
+
+    .grid-line {
+        border-bottom: 1px dashed #e0f0ff;
+        flex: 1;
+    }
+
+    .chart-bars {
+        display: flex;
+        align-items: flex-end;
+        height: 100%;
+        gap: 15px;
+        padding: 0 20px;
+    }
+
+    .bar {
+        width: 30px;
+        background: linear-gradient(to top, #3498db, #85c1ff);
+        border-radius: 4px 4px 0 0;
+        position: relative;
+    }
+
+    .bar-label {
+        position: absolute;
+        bottom: -25px;
+        width: 100%;
+        text-align: center;
+        font-size: 0.8rem;
+        color: #7f8c8d;
+    }
