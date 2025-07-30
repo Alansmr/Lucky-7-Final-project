@@ -1,48 +1,46 @@
-
-// 模拟的投资组合数据
-const portfolios = [
-    { companyname: 'AAPL', code: 'Apple Inc.', price: 620, shares: 8},
-    { companyname: 'MSFT', code: 'Microsoft Corporation', price: 214, shares: 1},
-    { companyname: 'GOOGL', code : 'Alphabet Inc. (Google)', price: 345, shares: 5},
-    { companyname: 'MRNA', code: 'Moderna Inc.', price: 67, shares: 2},
-    { companyname: 'PFE', code: 'Pfizer Inc.', price: 650, shares: 2}
-];
-
-// 页面加载时初始化
-document.addEventListener('DOMContentLoaded', function() {
-    renderPortfolioList();
-    initCharts();
-});
-
-// 渲染投资组合列表
-function renderPortfolioList() {
-    const portfolioList = document.getElementById('portfolioList');
-    portfolioList.innerHTML = '';
-    
-    portfolios.forEach(portfolio => {
-        const portfolioItem = document.createElement('div');
-        portfolioItem.className = `portfolio-item ${portfolio.active ? 'active' : ''}`;
-        portprice = portfolio.shares*portfolio.price
-        portfolioItem.innerHTML = `
-            <div class="nametag">
-            <strong>${portfolio.companyname}</strong> (${portfolio.code})
-            </div>
-            <div class="price">
-            Price: ${portprice}
-            </div>
-            <div class="shares">Shares: ${portfolio.shares}</div>
-        `;
-        portfolioList.appendChild(portfolioItem);
-    });
-}
-
-//
-async function fetchAndRenderProtolio() {
+async function fetchAndRenderPorfolios() {
   try {
-    const response = await fetch('api/protfolio');
-    const protfolio = await response.json();
+    const response = await fetch('/api/protfolio'); // 修正拼写错误
+    return await response.json();
   } catch (error) {
-    console.error('Failed to fetch protfolio:', error);
+    console.error('Failed to fetch portfolios:', error);
+    return []; // 错误时返回空数组避免崩溃
   }
 }
 
+// 页面加载时初始化
+document.addEventListener('DOMContentLoaded', async function() {
+  // 等待异步获取数据完成
+  const portfolios = await fetchAndRenderPorfolios();
+  console.log('Fetched portfolios:', portfolios);
+  
+  // 使用实际数据渲染
+  renderPortfolioList(portfolios);
+  initCharts(); // 确保此函数也能处理数据
+});
+
+// 修改渲染函数接收参数
+function renderPortfolioList(portfolios) {
+  const portfolioList = document.getElementById('portfolioList');
+  portfolioList.innerHTML = '';
+  
+  // 添加空数据保护
+  if (!portfolios || portfolios.length === 0) {
+    portfolioList.innerHTML = '<div class="empty">No portfolios found</div>';
+    return;
+  }
+  
+  portfolios.forEach(portfolio => {
+    const portprice = portfolio.share * portfolio.currentPrice;
+    const portfolioItem = document.createElement('div');
+    portfolioItem.className = `portfolio-item ${portfolio.active ? 'active' : ''}`;
+    portfolioItem.innerHTML = `
+      <div class="nametag">
+        <strong>${portfolio.companyName}</strong> (${portfolio.code})
+      </div>
+      <div class="price">Value: $${portprice.toFixed(2)}</div>
+      <div class="shares">Shares: ${portfolio.share}</div>
+    `;
+    portfolioList.appendChild(portfolioItem);
+  });
+}
