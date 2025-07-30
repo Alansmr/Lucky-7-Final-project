@@ -121,7 +121,7 @@ body {
   font-weight: bold;
 }
 
-.portfolio-shares {
+.portfolio-item .shares  {
         display: flex;
         font-size: 0.9rem;
         color: #7f8c8d;

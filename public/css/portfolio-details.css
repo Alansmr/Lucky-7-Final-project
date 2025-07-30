@@ -91,25 +91,27 @@ body {
     box-shadow: 0 5px 15px rgba(52, 152, 219, 0.15);
 }
 
-.portfolio-item h3 {
+.portfolio-item .nametag {
     font-size: 1.4rem;
     margin-bottom: 8px;
     color: #3498db;
     display: flex;
 }
 
-.portfolio-item .value {
+.portfolio-item .price {
     font-size: 1.2rem;
     font-weight: 700;
     color: #2980b9;
 }
 
-.portfolio-item .change {
+
+.portfolio-item .shares {
+    display: flex;
     font-size: 0.9rem;
-    padding: 3px 8px;
-    border-radius: 12px;
-    margin-left: 10px;
+    color: #7f8c8d;
+    margin-top: 10px;
 }
+
 
 .change.positive {
     background: rgba(46, 204, 113, 0.15);
