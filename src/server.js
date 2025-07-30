@@ -19,7 +19,7 @@ app.use('/', protfolioRoute);
 
 // 将根路径重定向到主页面
 app.get('/', (req, res) => {
-  res.redirect('/homepage.html');
+  res.redirect('/portfolio-details.html');
 });
 
 async function startServer() {
