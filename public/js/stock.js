@@ -258,14 +258,16 @@ function addPortfolioItem({ companyname, code, price, share }) {
   item.className = 'portfolio-item';
   item.innerHTML = `
   <div>
-  <strong>${companyname}</strong> (${code})
+    <strong>${name}</strong> (${code})
   </div>
-  <div>
-  Purchase Price: ${price}
-  <span class="portfolio-shares">Shares:<span class="shares-num">${share}</span></span>
-  <button class="sell-btn">Sell</button>
+  <div class="portfolio-price">
+    Purchase Price: ${price}
   </div>
-  `;
+  <div class="portfolio-row">
+    <span class="portfolio-shares">Shares: <span class="shares-num">0</span></span>
+    <button class="sell-btn">Sell</button>
+  </div>
+`;
   list.appendChild(item);
   updatePortfolioTotal();
 }
@@ -290,3 +292,15 @@ function updatePortfolioTotal() {
   });
   document.getElementById('portfolioTotal').textContent = 'Total: ' + total.toFixed(2);
 }
+
+let userCash = 10000; // 初始现金
+
+function updateCashDisplay() {
+  document.getElementById('portfolioCash').textContent = `Cash: $${userCash.toFixed(2)}`;
+}
+
+// 页面加载时初始化 cash 显示
+document.addEventListener('DOMContentLoaded', function() {
+  updateCashDisplay();
+  // ...existing code...
+});

@@ -13,13 +13,14 @@ body, html {
 }
 
 body {
+  margin: 0;
+  padding: 0;
   background: #f5f7fa;
   font-family: 'Segoe UI', 'Arial', sans-serif;
   color: #222;
   min-height: 100vh;
 }
 
-/* 主内容区布局 - 占满整个页面宽度 */
 .main-container {
   display: flex;
   width: 100vw;
@@ -33,7 +34,7 @@ body {
   overflow: hidden;
 }
 
-/* 左侧投资组合区域（严格占1/3宽度） */
+/* 主内容区布局 - 占满整个页面宽度 */
 .portfolio-container {
   width: 33.33vw;
   min-width: 260px;
@@ -223,21 +224,26 @@ body {
 /* 表头样式 */
 .table-header {
   display: flex;
-  background-color: #e3f2ff; /* 浅蓝表头背景 */
-  border-bottom: 1px solid #d4eeff; /* 浅蓝色分隔线 */
+  background-color: #e3f2ff;
+  border-bottom: 1px solid #d4eeff;
   font-weight: bold;
   font-size: 16px;
   color: #165DFF;
-  padding: 12px 0;
+  padding: 0;
 }
 
-.table-header > div {
+.table-header > div,
+.table-row > div {
   flex: 1;
   text-align: center;
+  padding: 12px 0;
+  border-right: 1px solid #d4eeff;
 }
 
-.table-header > div:last-child {
+.table-header > div:last-child,
+.table-row > div:last-child {
   flex: 0.8;
+  border-right: none;
 }
 
 /* 行样式 */
@@ -249,18 +255,6 @@ body {
 
 .table-row:hover {
   background-color: #f8fbff; /* 浅蓝悬停背景 */
-}
-
-.table-row>div {
-  flex: 1;
-  text-align: center;
-  padding: 12px 0;
-  border-right: 1px solid #d4eeff; /* 浅蓝色分隔线 */
-}
-
-.table-row>div:last-child {
-  flex: 0.5;
-  border-right: none;
 }
 
 /* 按钮样式 */
