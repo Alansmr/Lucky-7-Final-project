@@ -20,8 +20,6 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 
 router.get('/stocks', (req, res) => {
   
-  console.log('实际拼接路径：', htmlPath);
-
   res.sendFile(htmlPath, (err) => {
     if (err) {
       console.error('文件发送失败：', err);
