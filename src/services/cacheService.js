@@ -146,10 +146,42 @@ class CacheService {
 
   getCompanyNameByTicker(ticker) {
     const tickerMap = {
-      'AAPL': 'Apple Inc.',
-      'AMZN': 'Amazon.com Inc.',
-      'TSLA': 'Tesla Inc.',
-      'C': 'Citigroup Inc.',
+    // 科技板块（Technology）
+    'AAPL': 'Apple Inc.',
+    'MSFT': 'Microsoft Corporation',
+    'GOOGL': 'Alphabet Inc. (Google)',
+    'AMZN': 'Amazon.com Inc.',
+    'NVDA': 'NVIDIA Corporation',
+    'META': 'Meta Platforms Inc. (Facebook)',
+    'TSLA': 'Tesla Inc.',
+    'ADBE': 'Adobe Inc.',
+    'CRM': 'Salesforce Inc.',
+    'AMD': 'Advanced Micro Devices',
+
+    // 生物医药板块（Biotech/Pharma）
+    'MRNA': 'Moderna Inc.',
+    'PFE': 'Pfizer Inc.',
+    'JNJ': 'Johnson & Johnson',
+    'REGN': 'Regeneron Pharmaceuticals',
+    'VRTX': 'Vertex Pharmaceuticals',
+    'GILD': 'Gilead Sciences',
+    'BIIB': 'Biogen Inc.',
+    'AMGN': 'Amgen Inc.',
+    'ILMN': 'Illumina Inc.',
+    'SRPT': 'Sarepta Therapeutics',
+
+    // 金融板块（Financial Services）
+    'JPM': 'JPMorgan Chase & Co.',
+    'BAC': 'Bank of America',
+    'GS': 'Goldman Sachs Group',
+    'MS': 'Morgan Stanley',
+    'V': 'Visa Inc.',
+    'MA': 'Mastercard Inc.',
+    'PYPL': 'PayPal Holdings',
+    'HOOD': 'Robinhood Markets',
+    'BLK': 'BlackRock Inc.',
+    'AXP': 'American Express',
+    'C': 'Citigroup Inc.',
     };
     return tickerMap[ticker] || ticker;
   }

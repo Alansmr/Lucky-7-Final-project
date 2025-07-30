@@ -12,8 +12,39 @@ export async function getStockData() {
 function getCompanyNameByTicker(ticker) {
   const tickerMap = {
     'AAPL': 'Apple Inc.',
+    'MSFT': 'Microsoft Corporation',
+    'GOOGL': 'Alphabet Inc. (Google)',
     'AMZN': 'Amazon.com Inc.',
+    'NVDA': 'NVIDIA Corporation',
+    'META': 'Meta Platforms Inc. (Facebook)',
     'TSLA': 'Tesla Inc.',
+    'ADBE': 'Adobe Inc.',
+    'CRM': 'Salesforce Inc.',
+    'AMD': 'Advanced Micro Devices',
+
+    // 生物医药板块（Biotech/Pharma）
+    'MRNA': 'Moderna Inc.',
+    'PFE': 'Pfizer Inc.',
+    'JNJ': 'Johnson & Johnson',
+    'REGN': 'Regeneron Pharmaceuticals',
+    'VRTX': 'Vertex Pharmaceuticals',
+    'GILD': 'Gilead Sciences',
+    'BIIB': 'Biogen Inc.',
+    'AMGN': 'Amgen Inc.',
+    'ILMN': 'Illumina Inc.',
+    'SRPT': 'Sarepta Therapeutics',
+
+    // 金融板块（Financial Services）
+    'JPM': 'JPMorgan Chase & Co.',
+    'BAC': 'Bank of America',
+    'GS': 'Goldman Sachs Group',
+    'MS': 'Morgan Stanley',
+    'V': 'Visa Inc.',
+    'MA': 'Mastercard Inc.',
+    'PYPL': 'PayPal Holdings',
+    'HOOD': 'Robinhood Markets',
+    'BLK': 'BlackRock Inc.',
+    'AXP': 'American Express',
     'C': 'Citigroup Inc.',
   };
   return tickerMap[ticker] || ticker; 
@@ -21,9 +52,41 @@ function getCompanyNameByTicker(ticker) {
 
 function getTickerByCompanyName(name) {
   const companyNameMap = {
-    'Apple Inc.' : 'AAPL', 
-    'Amazon.com Inc.' : 'AMZN',
-    'Tesla Inc.' : 'TSLA',
+    // 科技板块（Technology）
+    'Apple Inc.': 'AAPL',
+    'Microsoft Corporation': 'MSFT',
+    'Alphabet Inc. (Google)': 'GOOGL',
+    'Amazon.com Inc.': 'AMZN',
+    'NVIDIA Corporation': 'NVDA',
+    'Meta Platforms Inc. (Facebook)': 'META',
+    'Tesla Inc.': 'TSLA',
+    'Adobe Inc.': 'ADBE',
+    'Salesforce Inc.': 'CRM',
+    'Advanced Micro Devices': 'AMD',
+
+    // 生物医药板块（Biotech/Pharma）
+    'Moderna Inc.': 'MRNA',
+    'Pfizer Inc.': 'PFE',
+    'Johnson & Johnson': 'JNJ',
+    'Regeneron Pharmaceuticals': 'REGN',
+    'Vertex Pharmaceuticals': 'VRTX',
+    'Gilead Sciences': 'GILD',
+    'Biogen Inc.': 'BIIB',
+    'Amgen Inc.': 'AMGN',
+    'Illumina Inc.': 'ILMN',
+    'Sarepta Therapeutics': 'SRPT',
+
+    // 金融板块（Financial Services）
+    'JPMorgan Chase & Co.': 'JPM',
+    'Bank of America': 'BAC',
+    'Goldman Sachs Group': 'GS',
+    'Morgan Stanley': 'MS',
+    'Visa Inc.': 'V',
+    'Mastercard Inc.': 'MA',
+    'PayPal Holdings': 'PYPL',
+    'Robinhood Markets': 'HOOD',
+    'BlackRock Inc.': 'BLK',
+    'American Express': 'AXP',
     'Citigroup Inc.' : 'C',
   };
   return companyNameMap[name]; 
