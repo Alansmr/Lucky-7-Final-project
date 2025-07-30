@@ -10,7 +10,7 @@ export async function getPortfolioData() {
     // 1. 从数据库获取用户所有交易记录
     const { data: transactions, error: transactionError } = await supabase
       .from('holderinfo')
-      .select('code, share, buyorsale, price');
+      .select('code, type, share, buyorsale, price');
 
     if (transactionError) throw transactionError;
 
@@ -27,7 +27,7 @@ export async function getPortfolioData() {
     const portfolio = {};
     
     transactions.forEach(transaction => {
-      const { code, share, buyorsale, price } = transaction;
+      const { code, type, share, buyorsale, price } = transaction;
       
       // 跳过没有当前价格的股票
       if (!currentPricesMap[code]) return;
@@ -36,10 +36,11 @@ export async function getPortfolioData() {
       if (!portfolio[code]) {
         portfolio[code] = {
           code,
-          totalBuyShares: 0,    // 总买入数量
-          totalSellShares: 0,   // 总卖出数量
-          buyAmount: 0,         // 总买入金额
-          sellAmount: 0,        // 总卖出金额
+          type : type,
+          totalBuyShares: 0,
+          totalSellShares: 0, 
+          buyAmount: 0,   
+          sellAmount: 0,
           currentPrice: currentPricesMap[code]
         };
       }
@@ -68,6 +69,7 @@ export async function getPortfolioData() {
           
         return {
           code: item.code,
+          type: item.type,
           companyName: getCompanyNameByCode(item.code),
           share: totalShares,
           avgBuyPrice: avgBuyPrice.toFixed(2),
@@ -77,7 +79,7 @@ export async function getPortfolioData() {
           increasePercent: `${increasePercent}%`
         };
       })
-      .filter(item => item.share > 0); // 过滤掉持有量为0的股票
+      .filter(item => item.share > 0); 
 
     return result;
   } catch (error) {
@@ -127,4 +129,8 @@ function getCompanyNameByCode(code) {
     'C': 'Citigroup Inc.',
     };
   return tickerMap[code] || code;
+}
+
+export async function getAssetDetails(){
+  //return protfolio networth and total assets
 }

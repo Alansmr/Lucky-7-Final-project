@@ -26,7 +26,7 @@ class CacheService {
       // 1. 获取每个股票的最新记录
       const { data: allLatestData, error: latestError } = await supabase
         .from('stackinfo')
-        .select('ticker, close, timestamp')
+        .select('ticker, type, close, timestamp')
         .order('timestamp', { ascending: false });
 
       if (latestError) throw latestError;
@@ -47,30 +47,26 @@ class CacheService {
         const latestRecord = latestRecords[ticker];
         const latestDate = new Date(latestRecord.timestamp); 
 
-        // 计算“上一天”的时间范围：前一天00:00:00 至 23:59:59
         const previousDay = new Date(latestDate);
-        // 减去一天
         previousDay.setDate(latestDate.getDate() - 1);  
 
-        // 上一天开始时间：00:00:00
         const prevDayStart = new Date(previousDay);
         prevDayStart.setHours(0, 0, 0, 0);
-        // 上一天结束时间：23:59:59
+      
         const prevDayEnd = new Date(previousDay);
         prevDayEnd.setHours(23, 59, 59, 999);
 
         const startStr = this.formatDateTime(prevDayStart);
         const endStr = this.formatDateTime(prevDayEnd);
 
-        // 查询上一天范围内的记录，取最新一条（按时间倒序）
         const { data: prevData, error: prevError } = await supabase
           .from('stackinfo')
-          .select('close')  // 假设上一天的价格用收盘价（可根据实际调整）
+          .select('close')  
           .eq('ticker', ticker)
-          .gte('timestamp', startStr)  // 大于等于上一天00:00:00
-          .lte('timestamp', endStr)    // 小于等于上一天23:59:59
-          .order('timestamp', { ascending: false })  // 最新的在前
-          .limit(1);  // 只取一条
+          .gte('timestamp', startStr)  
+          .lte('timestamp', endStr)   
+          .order('timestamp', { ascending: false }) 
+          .limit(1);  
 
         if (prevError) {
           console.warn(`获取${ticker}上一天价格失败:`, prevError);
@@ -78,7 +74,6 @@ class CacheService {
           continue;
         }
 
-        // 保存上一天的价格（若无上一天数据，用当前价格兜底）
         previousDayPrices[ticker] = prevData.length > 0 
           ? prevData[0].close 
           : latestRecord.close;
@@ -93,6 +88,7 @@ class CacheService {
           return {
             companyName: this.getCompanyNameByTicker(stock.ticker),
             ticker: stock.ticker,
+            type: stock.type,
             currentPrice: currentClose.toFixed(2),
             previousDayPrice: 'N/A',  
             increasePercent: 'N/A',
@@ -101,13 +97,13 @@ class CacheService {
           };
         }
 
-        // 计算涨幅（金额和百分比）
         const increaseAmount = (currentClose - prevDayPrice).toFixed(2);
         const increasePercent = ((increaseAmount / prevDayPrice) * 100).toFixed(2);
 
         return {
           companyName: this.getCompanyNameByTicker(stock.ticker),
           ticker: stock.ticker,
+          type : stock.type,
           currentPrice: currentClose.toFixed(2),
           previousDayPrice: prevDayPrice.toFixed(2),
           increasePercent: `${increasePercent}%`,
@@ -123,7 +119,6 @@ class CacheService {
     }
   }
 
-  // 从缓存获取股票数据（优先使用缓存，失效时重新获取）
   async getStockData() {
     // 检查缓存是否存在且未过期
     const now = Date.now();
@@ -144,7 +139,6 @@ class CacheService {
     return freshData;
   }
 
-  // 初始化缓存（服务器启动时调用）
   async initialize() {
     try {
       const stockData = await this.fetchStockDataFromDB();
