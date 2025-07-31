@@ -37,7 +37,6 @@ function showSellModal(portfolioItem) {
     portfolioItem.setAttribute('data-shares', currentShares);
     errorDiv.style.color = '#00B42A';
     errorDiv.textContent = 'Sell successfully!';
-    updatePortfolioTotal();
     setTimeout(closeSellModal, 600);
   };
   document.getElementById('modalCloseBtnSell').onclick = closeSellModal;
@@ -210,8 +209,7 @@ function addPortfolioItem({ companyname, code, price, share}) {
   item.querySelector('.sell-btn').onclick = function() {
     showSellModal(item);
   };
-  list.appendChild(item);
-  updatePortfolioTotal();
+  list.insertBefore(item, list.firstChild);
 }
 
 let userCash = fetch('/api/userCache')
