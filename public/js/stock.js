@@ -1,13 +1,3 @@
-// 导航栏切换逻辑
-function setActive(element) {
-  const navItems = document.querySelectorAll('.nav-item');
-  navItems.forEach(item => {
-    item.classList.remove('active');
-  });
-  element.classList.add('active');
-}
-
-
 // 修改添加股票逻辑（弹出买入弹窗，插入数据）
 async function addToPortfolio(name, code, price, type) {
   // 记录当前股票信息，供买入弹窗使用
