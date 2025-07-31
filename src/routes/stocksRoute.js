@@ -117,4 +117,22 @@ router.post('/api/holderinfo/add', express.json(), async (req, res) => {
   res.json({ success: true });
 });
 
+// 获取投资组合列表接口
+router.get('/api/holderinfo/list', async (req, res) => {
+  const { data, error } = await supabase
+    .from('holderinfo')
+    .select('companyname, code, price, share');
+  if (error)
+    {
+    console.log('获取投资组合列表失败:', error); // 新增日志
+    return res.status(500).json({ success: false, message: '获取投资组合列表失败' });
+    }
+  else
+    {
+      console.log('获取投资组合列表:', data); // 新增日志
+      console.log('successful select in left')
+    } 
+  res.json(data);
+});
+
 export default router;
