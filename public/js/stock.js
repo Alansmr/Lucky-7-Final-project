@@ -312,8 +312,8 @@ async function fetchPortfolioList() {
 // 页面加载时调用
 document.addEventListener('DOMContentLoaded', function() {
   updateCashDisplay();
-    const navItems = document.querySelectorAll('.nav-item');
-  
+
+  const navItems = document.querySelectorAll('.nav-item');
   navItems.forEach(item => {
     item.addEventListener('click', function() {
       // 移除所有导航项的active类
@@ -334,6 +334,7 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     });
   });
+  
   fetchAndRenderStocks();
   fetchPortfolioList(); // 新增：渲染左侧投资组合
 });
