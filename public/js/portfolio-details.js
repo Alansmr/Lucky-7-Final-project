@@ -79,3 +79,92 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
 });
+
+async function initIndustryCompositionChart() {
+  try {
+    const response = await fetch('/api/protfolio/composition');
+    const composition = await response.json();
+    console.log('Composition Data:', composition); // 调试输出
+    
+    const ctx = document.getElementById('industryCompositionChart').getContext('2d');
+    
+    // 从新数据结构中提取数据
+    const labels = Object.keys(composition);
+    const percentages = labels.map(label => parseFloat(composition[label].percentage));
+    const amounts = labels.map(label => composition[label].totalAmount);
+    const shares = labels.map(label => composition[label].totalShares);
+    
+    // 计算总价值（用于中心显示）
+    const totalValue = amounts.reduce((sum, val) => sum + val, 0).toFixed(2);
+    
+    // 创建图表实例
+    const chart = new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        labels: labels.map(label => `${label} (${composition[label].percentage}%)`),
+        datasets: [{
+          data: percentages,
+          backgroundColor: [
+            'rgba(54, 162, 235, 0.85)',
+            'rgba(75, 192, 192, 0.85)',
+            'rgba(255, 159, 64, 0.85)'
+          ],
+          borderColor: [
+            'rgba(54, 162, 235, 1)',
+            'rgba(75, 192, 192, 1)',  
+            'rgba(255, 159, 64, 1)'
+          ],
+          borderWidth: 2,
+          hoverOffset: 15
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        cutout: '65%',
+        plugins: {
+          legend: {
+            position: 'right',
+            labels: {
+              font: {
+                size: 14
+              },
+              padding: 20
+            }
+          },
+          tooltip: {
+            callbacks: {
+              label: function(context) {
+                const label = context.label.split(' (')[0];
+                const index = context.dataIndex;
+                return [
+                  `${label}: ${composition[label].percentage}%`,
+                  `Value: $${amounts[index].toLocaleString()}`,                   
+                  `Shares: ${shares[index]}`                 
+                ];               
+              }             
+            },             
+            padding: 12,             
+            backgroundColor: 'rgba(0, 0, 0, 0.8)',             
+            titleFont: { size: 16 },             
+            bodyFont: { size: 14 }           
+          }         
+        }       
+      }     
+    });          // 添加中心总价值显示     
+    const centerValue = document.createElement('div');     
+    centerValue.className = 'chart-center-value';     
+    centerValue.innerHTML = `       
+    <div class="total-label">Total Portfolio Value</div>       
+    <div class="total-amount">$${totalValue}</div>
+    `;
+    const chartContainer = document.getElementById('industryCompositionChart').parentNode;
+    chartContainer.appendChild(centerValue);
+    
+  } catch (error) {
+    console.error('Failed to initialize composition chart:', error);
+  }
+}
+
+// DOM加载后调用
+document.addEventListener('DOMContentLoaded', initIndustryCompositionChart);
