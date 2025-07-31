@@ -21,13 +21,19 @@
   </div>
 
     <div class="main-container">
-        <!-- 左侧投资组合区域 -->
         <div class="portfolio-container">
+            <!-- 投资组合列表保持不变 -->
             <div class="portfolio-list" id="portfolioList">
                 <!-- 动态添加的投资组合项将显示在这里 -->
             </div>
+            
+            <!-- 新增现金显示区域 -->
+            <div id="cashDisplay" class="portfolio-total portfolio-cash">
+                <span>Available Cash:</span>
+                <span class="value" id="cashValue">Loading...</span>
+            </div>
         </div>
-
+        
     <!-- 右侧详细信息区域 -->
     <div class="details-container">
         <div class="dashboard-layout">

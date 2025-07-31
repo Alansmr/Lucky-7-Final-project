@@ -335,3 +335,22 @@ body {
     background: #165DFF;
     color: #fff;
 }
+
+/* 现金显示样式 */
+.portfolio-container .portfolio-cash {
+    margin-top: auto; /* 确保始终在底部 */
+    background: #f1f9ff;
+    border-top: 2px solid #d4eeff;
+    border-radius: 0 0 12px 12px;
+}
+
+.portfolio-cash .value {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #27ae60; /* 绿色表示现金 */
+}
+
+.portfolio-cash > span:first-child {
+    font-weight: 600;
+    color: #7f8c8d;
+}
