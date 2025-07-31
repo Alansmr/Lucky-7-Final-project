@@ -209,7 +209,7 @@ function addPortfolioItem({ companyname, code, price, share}) {
   item.querySelector('.sell-btn').onclick = function() {
     showSellModal(item);
   };
-  list.insertBefore(item, list.firstChild);
+  list.insertBefore(item, list.firstChild); // 反转左侧列表
 }
 
 let userCash = fetch('/api/userCache')
