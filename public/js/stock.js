@@ -174,12 +174,6 @@ searchBtn.addEventListener('click', function () {
 // 页面加载时获取数据
 document.addEventListener('DOMContentLoaded', fetchAndRenderStocks);
 
-function showBuyModal() {
-  document.getElementById('buyModal').style.display = 'flex';
-  document.getElementById('buyAmountInput').value = '';
-  document.getElementById('modalError').textContent = '';
-}
-
 function closeBuyModal() {
   document.getElementById('buyModal').style.display = 'none';
 }
