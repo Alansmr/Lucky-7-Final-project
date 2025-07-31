@@ -35,7 +35,8 @@ class UserCacheService {
     async updateUserCash(newCash) {
         const { error } = await supabase
         .from('user')
-        .upsert({ cash: newCash });
+        .update({ cash: newCash })
+        .eq('id', 1);
     
         if (error) {
             console.error('更新用户现金失败:', error);
