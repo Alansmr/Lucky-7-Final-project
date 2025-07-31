@@ -16,7 +16,11 @@ document.addEventListener('DOMContentLoaded', async function() {
   
   // 使用实际数据渲染
   renderPortfolioList(portfolios);
-  initCharts(); // 确保此函数也能处理数据
+  // 渲染涨跌幅前五
+  renderIncreaseTop5(portfolios);
+  renderDecreaseTop5(portfolios);
+  // 确保此函数也能处理数据
+  initCharts(); 
 });
 
 // 修改渲染函数接收参数
@@ -58,3 +62,74 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 });
+
+// 将"-13.65%"转化为可用于比较的-13.65
+function parsePercent(percentStr) {
+  // "-13.65%" => -13.65
+  return parseFloat(percentStr.replace('%', ''));
+}
+
+// 实现渲染涨幅前五
+function renderIncreaseTop5(portfolios) {
+  const container = document.getElementById('increaseTop5');
+  container.innerHTML = '';
+  if (!portfolios || portfolios.length === 0) {
+    container.innerHTML = '<div class="empty">No data</div>';
+    return;
+  }
+  // 按涨幅降序排序，取前五
+  const top5 = portfolios
+    .slice()
+    .sort((a, b) => parsePercent(b.increasePercent) - parsePercent(a.increasePercent))
+    .slice(0, 5);
+
+  // 构建表格
+  let html = `<table class="top-table">
+    <tr>
+      <th>Company</th>
+      <th>Price</th>
+      <th>Increase</th>
+    </tr>`;
+  top5.forEach(stock => {
+    const percentNum = parsePercent(stock.increasePercent);
+    html += `<tr>
+      <td>${stock.companyName}</td>
+      <td>${stock.currentPrice}</td>
+      <td style="color:${percentNum >= 0 ? 'red' : 'green'}">${stock.increasePercent}</td>
+    </tr>`;
+  });
+  html += `</table>`;
+  container.innerHTML = html;
+}
+// 实现渲染跌幅前五
+function renderDecreaseTop5(portfolios) {
+  const container = document.getElementById('decreaseTop5');
+  container.innerHTML = '';
+  if (!portfolios || portfolios.length === 0) {
+    container.innerHTML = '<div class="empty">No data</div>';
+    return;
+  }
+  // 按涨幅升序排序，取前五
+  const bottom5 = portfolios
+    .slice()
+    .sort((a, b) => parsePercent(a.increasePercent) - parsePercent(b.increasePercent))
+    .slice(0, 5);
+
+  // 构建表格
+  let html = `<table class="top-table">
+    <tr>
+      <th>Company</th>
+      <th>Price</th>
+      <th>Decrease</th>
+    </tr>`;
+  bottom5.forEach(stock => {
+    const percentNum = parsePercent(stock.increasePercent);
+    html += `<tr>
+      <td>${stock.companyName}</td>
+      <td>${stock.currentPrice}</td>
+      <td style="color:${percentNum >= 0 ? 'red' : 'green'}">${stock.increasePercent}</td>
+    </tr>`;
+  });
+  html += `</table>`;
+  container.innerHTML = html;
+}
