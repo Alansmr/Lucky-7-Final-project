@@ -1,3 +1,4 @@
+
 // 导航栏切换逻辑
 function setActive(element) {
   const navItems = document.querySelectorAll('.nav-item');
@@ -47,7 +48,7 @@ function showSellModal(portfolioItem) {
     portfolioItem.setAttribute('data-shares', currentShares);
     errorDiv.style.color = '#00B42A';
     errorDiv.textContent = 'Sell successfully!';
-    updatePortfolioTotal();
+    //updatePortfolioTotal();
     setTimeout(closeSellModal, 600);
   };
   document.getElementById('modalCloseBtnSell').onclick = closeSellModal;
@@ -188,6 +189,21 @@ document.getElementById('modalBuyBtn').onclick = async function() {
     if (result.success) {
       document.getElementById('buyModal').style.display = 'none';
       addPortfolioItem(payload); // 更新左侧列表
+      userCash -= currentBuyStock.price * share;
+      fetch('/api/userCache', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ cash: userCash })
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          console.log('User cash updated successfully');
+        } else {
+          console.error('Failed to update user cash:', data);
+        }
+      })     
+      updateCashDisplay();
     } else {
       document.getElementById('modalError').textContent = result.message || 'Failed to buy stock.';
     }
@@ -221,7 +237,6 @@ function addPortfolioItem({ companyname, code, price, share}) {
     showSellModal(item);
   };
   list.appendChild(item);
-  updatePortfolioTotal();
 }
 
 let userCash = fetch('/api/userCache')
@@ -237,7 +252,23 @@ let userCash = fetch('/api/userCache')
   });
 
 function updateCashDisplay() {
-  document.getElementById('portfolioCash').textContent = `Cash: $${userCash}`;
+  //fetch user cash from the backend
+  fetch('/api/userCache')
+  .then(res => res.json())
+  .then(data => {
+    userCash = data.cash;
+  })
+  .catch(err => {
+    console.error('Failed to fetch user cash:', err);
+    userCash = 0; 
+  });
+  // 更新页面显示
+  const cashDisplay = document.getElementById('portfolioCash');
+  if (!cashDisplay) {
+    console.error('Cash display element not found');
+    return;
+  }
+  cashDisplay.textContent = `Cash: $${userCash}`;
 }
 
 // 页面加载时，读取 holderinfo 表并渲染左侧投资组合
