@@ -6,7 +6,9 @@
     <title>Investment Portfolio Analysis</title>
     <script src="js/portfolio-details.js"></script>
     <link rel="stylesheet" href="css/portfolio-details.css">
-    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> 
+    <script src="js/portfolio-details.js"></script>
+    <link rel="stylesheet" href="css/portfolio-details.css">    
 </head>
 <body>
     
@@ -30,46 +32,37 @@
             </div>
         </div>
 
-        <!-- 右侧详细信息区域 -->
-        <div class="details-container">
-            <div class="details-header">
-                <h2>My Portfolio Summary</h2>
-                <div class="info">
-                    <div><i class="fas fa-calendar-alt"></i> Created: Jan 15, 2023</div>
-                    <div><i class="fas fa-user"></i> User Name: John Smith</div>
+    <!-- 右侧详细信息区域 -->
+    <div class="details-container">
+        <div class="dashboard-layout">
+            <!-- 顶部行业分配图表 -->
+            <div class="top-chart-section">
+                <h3><i class="fas fa-chart-pie"></i> Industry Allocation</h3>
+                <div class="chart-container" style="position: relative; height: 300px;">
+                    <canvas id="industryCompositionChart"></canvas>
                 </div>
             </div>
             
-            <div class="charts-container">
-                <div class="chart-card">
-                    <h3><i class="fas fa-chart-pie"></i> Assets Details</h3>
-                    <div class="chart-container">
-                    </div>
-                </div>
-                
-                <div class="chart-card">
-                    <h3><i class="fas fa-chart-bar"></i> Sector Detail</h3>
-                    <div class="chart-container">
-                        <canvas id="performanceChart"></canvas>
-                    </div>
-                </div>
-                
-                <!-- 以下插入chart-container用于加载Top数据 -->
-                <div class="chart-card">
-                    <h3><i class="fas fa-globe-americas"></i>Daily Increase Top 5</h3>
-                    <div class="chart-container">
+            <!-- 下部排行榜区域 -->
+            <div class="ranking-section">
+                <!-- 涨幅Top 5 -->
+                <div class="ranking-card">
+                    <h3><i class="fas fa-arrow-up"></i> Daily Increase Top 5</h3>
+                    <div class="ranking-content">
                         <div id="increaseTop5"></div>
                     </div>
                 </div>
                 
-                <div class="chart-card">
-                    <h3><i class="fas fa-industry"></i>Daily Decrease Top 5</h3>
-                    <div class="chart-container">
+                <!-- 跌幅Top 5 -->
+                <div class="ranking-card">
+                    <h3><i class="fas fa-arrow-down"></i> Daily Decrease Top 5</h3>
+                    <div class="ranking-content">
                         <div id="decreaseTop5"></div>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
     </div>
 </body>
 </html>

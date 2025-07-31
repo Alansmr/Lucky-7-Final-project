@@ -97,17 +97,18 @@ router.get('/company/:name', async (req, res) => {
   }
 });
 
+
 // 添加投资组合接口（插入 holderinfo 表，code 不重复）
 router.post('/api/holderinfo/add', express.json(), async (req, res) => {
   console.log('收到买入请求:', req.body); // 新增日志
-  const { companyname, code, price, share, buyorsale } = req.body;
-  if (!companyname || !code || !price || !share) {
+  const { companyname, code, price, share, buyorsale, type } = req.body;
+  if (!companyname || !code || !price || !share || !buyorsale || !type) {
     return res.json({ success: false, message: '参数缺失' });
   }
 
   const { error: insertError } = await supabase
     .from('holderinfo')
-    .insert([{ companyname, code, price, share, buyorsale }]);
+    .insert([{ companyname, code, price, share, buyorsale, type }]);
 
   if (insertError) {
     console.error('插入失败:', insertError); // 新增日志
@@ -116,6 +117,7 @@ router.post('/api/holderinfo/add', express.json(), async (req, res) => {
 
   res.json({ success: true });
 });
+
 
 // 获取投资组合列表接口
 router.get('/api/holderinfo/list', async (req, res) => {

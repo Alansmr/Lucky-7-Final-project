@@ -9,7 +9,7 @@ class CacheService {
     this.stockDataCache = null;
     this.portfolioCache = null;  
     this.cacheTimestamp = null;  
-    this.userCash = 10000;    
+    this.userCash = 10000;
     this.cacheTTL = 24 * 60 * 60 * 1000;  
   }
 
