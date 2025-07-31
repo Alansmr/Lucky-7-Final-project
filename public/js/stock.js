@@ -178,6 +178,8 @@ document.getElementById('modalBuyBtn').onclick = async function() {
       document.getElementById('buyModal').style.display = 'none';
       addPortfolioItem(payload); // 更新左侧列表
       userCash -= currentBuyStock.price * share;
+      //保留两位小数
+      userCash.toFixed(2);
       fetch('/api/userCache', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
