@@ -6,7 +6,9 @@
     <title>Investment Portfolio Analysis</title>
     <script src="js/portfolio-details.js"></script>
     <link rel="stylesheet" href="css/portfolio-details.css">
-    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> 
+    <script src="js/portfolio-details.js"></script>
+    <link rel="stylesheet" href="css/portfolio-details.css">    
 </head>
 <body>
     
@@ -31,12 +33,11 @@
         </div>
 
         <!-- 右侧详细信息区域 -->
-        <div class="details-container">
-            <div class="details-header">
-                <h2>My Portfolio Summary</h2>
-                <div class="info">
-                    <div><i class="fas fa-calendar-alt"></i> Created: Jan 15, 2023</div>
-                    <div><i class="fas fa-user"></i> User Name: John Smith</div>
+            <!-- 修改details-container区域 -->
+            <div class="chart-card">
+            <h3><i class="fas fa-chart-pie"></i> Industry Allocation</h3>
+                <div class="chart-container" style="position: relative; height: 300px;">
+                    <canvas id="industryCompositionChart"></canvas>
                 </div>
             </div>
             
