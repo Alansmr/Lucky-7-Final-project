@@ -351,6 +351,7 @@ body {
 }
 
 .portfolio-cash > span:first-child {
+    font-size: 1.8rem;
     font-weight: 600;
-    color: #7f8c8d;
+    color: #165DFF;
 }
