@@ -8,25 +8,62 @@
 body, html {
   width: 100vw;
   height: 100vh;
+  margin: 0;
+  padding: 0;
   overflow-x: hidden;
 }
 
 body {
-  background: linear-gradient(135deg, #f0f9ff, #e6f7ff);
-  color: #2c3e50;
-  min-height: 100vh;
-  padding: 20px;
+    background: linear-gradient(135deg, #f0f9ff, #e6f7ff);
+    color: #2c3e50;
+    min-height: 100vh;
+    padding: 20px;
 }
 
 .main-container {
-  display: flex;
-  flex: 1;
-  max-width: 1600px;
+    display: flex;
+    flex: 1;
+    max-width: 1600px;
+    margin: 0 auto;
+    gap: 20px;
+    height: calc(100vh - 90px);
+    align-items: stretch; /* 确保子元素等高 */
+    margin-top: 52px;
+}
+
+/* 工具栏固定 */
+.nav {
+  width: 100%;
+  max-width: 1200px;
   margin: 0 auto;
-  gap: 20px;
-  height: calc(100vh - 90px);
+  display: flex;
+  flex-direction: row;
+  border: none;
+  background: none;
   align-items: stretch;
-  margin-top: 52px;
+  padding: 0 16px;
+}
+
+.nav-item {
+  flex: 1;
+  text-align: center;
+  padding: 16px 0;
+  border-radius: 0;
+  background: #f8fbff;
+  margin-right: 0;
+  font-weight: 600;
+  color: #165DFF;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+.nav-item:last-child {
+  margin-right: 0;
+}
+
+.nav-item.active {
+  background: #165DFF;
+  color: #fff;
+  font-weight: bold;
 }
 
 .nav-container {
@@ -39,40 +76,7 @@ body {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.nav {
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: row;
-  align-items: stretch;
-  padding: 0 16px;
-  border: none;
-  background: none;
-}
-
-.nav-item {
-  flex: 1;
-  text-align: center;
-  padding: 16px 0;
-  border-radius: 0;
-  background: #f8fbff;
-  font-weight: 600;
-  color: #165DFF;
-  cursor: pointer;
-  transition: background 0.2s, color 0.2s;
-}
-
-.nav-item:last-child {
-  margin-right: 0;
-}
-
-.nav-item.active {
-  background: #165DFF;
-  color: #fff;
-  font-weight: bold;
-}
-
+/* 主内容区布局 - 占满整个页面宽度 */ 
 .portfolio-container {
   width: 33%;
   background: #ffffff;
@@ -83,24 +87,15 @@ body {
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  height: 100%;
+  height: 100%; /* 保证高度撑满父容器 */
   position: relative;
-}
-
-.portfolio-title {
-  font-size: 1.6rem;
-  font-weight: bold;
-  color: #165DFF;
-  text-align: center;
-  margin-bottom: 18px;
-  letter-spacing: 1px;
 }
 
 .portfolio-list {
   flex: 1 1 auto;
   overflow-y: auto;
   margin-top: 15px;
-  margin-bottom: 20px;
+  margin-bottom: 20px; /* 给cash卡片留空间 */
   min-height: 0;
 }
 
@@ -119,22 +114,22 @@ body {
 }
 
 .portfolio-item:hover {
-  background: #edf7ff;
-  transform: translateY(-3px);
-  box-shadow: 0 5px 15px rgba(52, 152, 219, 0.15);
+    background: #edf7ff;
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(52, 152, 219, 0.15);
 }
 
 .portfolio-item .nametag {
-  font-size: 1.4rem;
-  margin-bottom: 8px;
-  color: #3498db;
-  display: flex;
-}
+        font-size: 1.4rem;
+        margin-bottom: 8px;
+        color: #3498db;
+        display: flex;
+    }
 
 .portfolio-item .price {
-  font-size: 1.2rem;
-  font-weight: 700;
-  color: #2980b9;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #2980b9;
 }
 
 .portfolio-item .row {
@@ -144,30 +139,65 @@ body {
   margin-top: 4px;
 }
 
-.portfolio-item .shares {
-  display: flex;
-  font-size: 0.9rem;
-  color: #7f8c8d;
-  margin-top: 10px;
+.portfolio-item .shares  {
+        display: flex;
+        font-size: 0.9rem;
+        color: #7f8c8d;
+        margin-top: 10px;
+    }
+
+.sell-btn {
+  min-width: 64px;
+  max-width: 100px;
+  text-align: center;
+  padding: 4px 16px;
+  background-color: #e74c3c; /* 红色 */
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  flex-shrink: 0;
+  margin-left: 12px;
 }
 
-.right-container {
-  width: 67%;
-  background: #ffffff;
-  border-radius: 16px;
-  padding: 30px;
-  box-shadow: 0 8px 20px rgba(200, 230, 255, 0.3);
-  border: 1px solid #e0f0ff;
+.sell-btn:hover {
+  background-color: #c0392b; /* 深红 */
+}
+
+/* 右侧区域（占2/3宽度） */
+/* .right-container {
+  flex: 1 1 0;
+  width: 66.67vw;
+  min-width: 0;
+  padding: 32px 32px 32px 32px;
+  background: #fff;
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
   height: 100%;
+  overflow-x: auto;
+  overflow-y: auto;
+} */
+
+.right-container {
+    width: 67%;
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 30px;
+    box-shadow: 0 8px 20px rgba(200, 230, 255, 0.3);
+    border: 1px solid #e0f0ff;
+    display: flex;
+    flex-direction: column;
+    height: 100%; /* 确保高度与左侧一致 */
 }
 
+/* 搜索栏样式 */
 .search-bar {
   flex: 1;
   margin: 0;
   position: relative;
-  max-width: 100%;
+  max-width: 100%;      /* 确保不超出容器 */
 }
 
 .search-bar input[type="text"] {
@@ -176,7 +206,7 @@ body {
   padding: 8px 12px;
   font-size: 16px;
   border-radius: 4px;
-  border: 1px solid #d4eeff;
+  border: 1px solid #d4eeff; /* 浅蓝色边框 */
   box-sizing: border-box;
 }
 
@@ -188,7 +218,7 @@ body {
   width: 44px;
   margin-left: 8px;
   background: #ffffff;
-  border: 1px solid #d4eeff;
+  border: 1px solid #d4eeff; /* 浅蓝色边框 */
   border-radius: 4px;
   box-sizing: border-box;
 }
@@ -196,8 +226,8 @@ body {
 .search-row {
   display: flex;
   align-items: center;
-  width: 100%;
-  max-width: 100%;
+  width: 100%;           
+  max-width: 100%;       /* 防止超出 */
   margin-bottom: 18px;
   box-sizing: border-box;
   padding-left: 24px;
@@ -216,6 +246,7 @@ body {
   }
 }
 
+/* 右侧股票表格区域 */
 .stock-container {
   width: 100%;
   min-width: 0;
@@ -223,6 +254,7 @@ body {
   box-sizing: border-box;
 }
 
+/* 表头样式 */
 .table-header {
   display: flex;
   background-color: #e3f2ff;
@@ -241,8 +273,6 @@ body {
   border-right: 1px solid #d4eeff;
   min-width: 0;
   box-sizing: border-box;
-  word-break: break-all;
-  white-space: normal;
 }
 
 .table-header > div:last-child,
@@ -250,19 +280,22 @@ body {
   border-right: none;
 }
 
+
+/* 行样式 */
 .table-row {
   display: flex;
-  border-bottom: 1px solid #d4eeff;
+  border-bottom: 1px solid #d4eeff; /* 浅蓝色分隔线 */
   transition: background-color 0.2s;
 }
 
 .table-row:hover {
-  background-color: #f8fbff;
+  background-color: #f8fbff; /* 浅蓝悬停背景 */
 }
 
+/* 按钮样式 */
 .add-btn {
   padding: 6px 12px;
-  background-color: #3498db;
+  background-color: #3498db; /* 蓝色按钮 */
   color: white;
   border: none;
   border-radius: 4px;
@@ -271,31 +304,29 @@ body {
 }
 
 .add-btn:hover {
-  background-color: #2980b9;
+  background-color: #2980b9; /* 深蓝悬停 */
 }
 
+/* 卖出按钮样式 */
 .sell-btn {
-  min-width: 64px;
-  max-width: 100px;
-  text-align: center;
-  padding: 4px 16px;
-  background-color: #e74c3c;
+  padding: 4px 10px;
+  background-color: #e74c3c; /* 红色按钮 */
   color: #fff;
   border: none;
   border-radius: 4px;
   cursor: pointer;
+  margin-left: 8px;
   transition: background-color 0.3s;
-  flex-shrink: 0;
-  margin-left: 12px;
 }
 
 .sell-btn:hover {
-  background-color: #c0392b;
+  background-color: #c0392b; /* 深红悬停 */
 }
 
+/* 弹窗里的卖出按钮样式 */
 .modal-sell-btn {
   padding: 4px 16px;
-  background-color: #e74c3c;
+  background-color: #e74c3c; /* 红色按钮 */
   color: #fff;
   border: none;
   border-radius: 4px;
@@ -307,16 +338,13 @@ body {
   min-width: 64px;
   max-width: 100px;
   text-align: center;
-  display: block;
-  margin: 16px auto 0 auto;
-  width: 120px;
-  height: 40px;
 }
 
 .modal-sell-btn:hover {
-  background-color: #c0392b;
+  background-color: #c0392b; /* 深红悬停 */
 }
 
+/* 统一所有按钮样式 */
 button,
 .add-btn,
 .sell-btn,
@@ -348,18 +376,46 @@ button:hover,
   background-color: #0E42D2;
 }
 
+/* 卖出按钮和弹窗卖出按钮用红色 */
+.sell-btn,
+.modal-sell-btn {
+  background-color: #e74c3c;
+}
+
+.sell-btn:hover,
+.modal-sell-btn:hover {
+  background-color: #c0392b;
+}
+
+/* 让弹窗按钮居中，宽高与外部按钮一致 */
+.modal-buy-btn,
+.modal-sell-btn {
+  display: block;
+  margin: 16px auto 0 auto;
+  width: 120px;      /* 与外部按钮宽度一致，可根据实际调整 */
+  height: 40px;      /* 与外部按钮高度一致，可根据实际调整 */
+  padding: 0;
+  font-size: 16px;
+  border-radius: 4px;
+  text-align: center;
+  font-family: 'Segoe UI', 'Arial', sans-serif;
+  font-weight: 500;
+}
+
+/* 涨跌颜色逻辑 */
 .red {
-  color: #e74c3c;
+  color: #e74c3c; /* 红色 */
 }
 
 .green {
-  color: #2ecc71;
+  color: #2ecc71; /* 绿色 */
 }
 
 .gray {
-  color: #95a5a6;
+  color: #95a5a6; /* 灰色 */
 }
 
+/* 重复插入提醒弹窗 */
 .custom-popup {
   position: fixed;
   left: 50%;
@@ -391,6 +447,7 @@ button:hover,
   background: #0E42D2;
 }
 
+/* 购买数量输入框 */
 .modal {
   position: fixed;
   top: 0;
@@ -437,14 +494,14 @@ button:hover,
   padding: 8px;
   font-size: 16px;
   margin-bottom: 12px;
-  border: 1px solid #d4eeff;
+  border: 1px solid #d4eeff; /* 浅蓝色边框 */
   border-radius: 4px;
-  background-color: #f8fbff;
+  background-color: #f8fbff; /* 浅蓝背景 */
   text-align: center;
 }
 
 .modal-error {
-  color: #e74c3c;
+  color: #e74c3c; /* 红色错误提示 */
   min-height: 20px;
   text-align: center;
   margin-bottom: 8px;
@@ -452,7 +509,7 @@ button:hover,
 }
 
 .modal-buy-btn {
-  background: #3498db;
+  background: #3498db; /* 蓝色按钮 */
   color: #fff;
   border: none;
   border-radius: 4px;
@@ -465,7 +522,6 @@ button:hover,
 .modal-buy-btn:hover {
   background: #0E42D2;
 }
-
 .portfolio-cash {
   position: relative;
   background: #f1f9ff;
@@ -480,11 +536,11 @@ button:hover,
   font-weight: bold;
   min-width: 160px;
   transition: box-shadow 0.2s;
-  margin-top: auto;
+  margin-top: auto; /* 保证在底部（如果父容器是flex column） */
   margin-bottom: 0;
   left: unset;
   bottom: unset;
-  max-width: 100%;
+  max-width: 100%; /* 不超出父容器 */
   box-sizing: border-box;
 }
 
@@ -545,21 +601,30 @@ button:hover,
   text-decoration: none;
 }
 
+.portfolio-title {
+  font-size: 1.6rem;
+  font-weight: bold;
+  color: #165DFF;
+  text-align: center;
+  margin-bottom: 18px;
+  letter-spacing: 1px;
+}
+
 /* 滚动条样式 */
 ::-webkit-scrollbar {
-  width: 8px;
+    width: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: rgba(224, 247, 255, 0.5);
-  border-radius: 10px;
+    background: rgba(224, 247, 255, 0.5);
+    border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #a8d8ff;
-  border-radius: 10px;
+    background: #a8d8ff;
+    border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #85c1ff;
+    background: #85c1ff;
 }
