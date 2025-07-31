@@ -17,17 +17,30 @@ async function fetchAndRenderPorfolios() {
   }
 }
 
+// 从后端获取股票数据并渲染表格
+async function fetchAndRenderStocks() {
+  try {
+    const response = await fetch('/api/stocks');
+    const stocks = await response.json();
+    return stocks;
+  } catch (error) {
+    console.error('Failed to fetch stocks:', error);
+  }
+}
+
 // 页面加载时初始化
 document.addEventListener('DOMContentLoaded', async function() {
   // 等待异步获取数据完成
   const portfolios = await fetchAndRenderPorfolios();
+  const stocks = await fetchAndRenderStocks();
   console.log('Fetched portfolios:', portfolios);
-  
+  console.log('Fetched stocks:', stocks);
+
   // 使用实际数据渲染
   renderPortfolioList(portfolios);
   // 渲染涨跌幅前五
-  renderIncreaseTop5(portfolios);
-  renderDecreaseTop5(portfolios);
+  renderIncreaseTop5(portfolios,stocks);
+  renderDecreaseTop5(portfolios,stocks);
   // 确保此函数也能处理数据
   initCharts(); 
 });
@@ -90,16 +103,30 @@ function parsePercent(percentStr) {
   return parseFloat(percentStr.replace('%', ''));
 }
 
-// 实现渲染涨幅前五
-function renderIncreaseTop5(portfolios) {
+function renderIncreaseTop5(portfolios, stocks) {
   const container = document.getElementById('increaseTop5');
   container.innerHTML = '';
-  if (!portfolios || portfolios.length === 0) {
+  console.log(portfolios);
+  console.log(stocks);
+  if (!portfolios || portfolios.length === 0 || !stocks || stocks.length === 0) {
     container.innerHTML = '<div class="empty">No data</div>';
     return;
   }
+
+  // 组合 portfolios 和 stocks 数据
+  const merged = portfolios.map(portfolio => {
+    const stock = stocks.find(s => s.ticker === portfolio.code);
+    return stock
+      ? {
+          companyName: stock.companyName,
+          currentPrice: stock.currentPrice,
+          increasePercent: stock.increasePercent
+        }
+      : null;
+  }).filter(item => item && item.increasePercent !== undefined);
+
   // 按涨幅降序排序，取前五
-  const top5 = portfolios
+  const top5 = merged
     .slice()
     .sort((a, b) => parsePercent(b.increasePercent) - parsePercent(a.increasePercent))
     .slice(0, 5);
@@ -122,16 +149,29 @@ function renderIncreaseTop5(portfolios) {
   html += `</table>`;
   container.innerHTML = html;
 }
-// 实现渲染跌幅前五
-function renderDecreaseTop5(portfolios) {
+
+function renderDecreaseTop5(portfolios, stocks) {
   const container = document.getElementById('decreaseTop5');
   container.innerHTML = '';
-  if (!portfolios || portfolios.length === 0) {
+  if (!portfolios || portfolios.length === 0 || !stocks || stocks.length === 0) {
     container.innerHTML = '<div class="empty">No data</div>';
     return;
   }
+
+  // 组合 portfolios 和 stocks 数据
+  const merged = portfolios.map(portfolio => {
+    const stock = stocks.find(s => s.ticker === portfolio.code);
+    return stock
+      ? {
+          companyName: stock.companyName,
+          currentPrice: stock.currentPrice,
+          increasePercent: stock.increasePercent
+        }
+      : null;
+  }).filter(item => item && item.increasePercent !== undefined);
+
   // 按涨幅升序排序，取前五
-  const bottom5 = portfolios
+  const bottom5 = merged
     .slice()
     .sort((a, b) => parsePercent(a.increasePercent) - parsePercent(b.increasePercent))
     .slice(0, 5);
