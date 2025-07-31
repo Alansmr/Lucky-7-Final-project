@@ -183,7 +183,7 @@ export async function getPortfolioComposition(){
       composition.Finance.percentage = ((composition.Finance.totalShares / totalShares) * 100).toFixed(2);
     }
 
-    return portfolioData;
+    return composition;
   } catch (error) {
     console.error('Error fetching portfolio composition:', error);
     throw error;
