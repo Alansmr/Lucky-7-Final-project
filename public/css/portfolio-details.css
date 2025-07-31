@@ -106,13 +106,13 @@ body {
     padding: 10px;
 }
 
-/* 中心总价值显示 */
+/* 左侧总价值显示 */
 .chart-center-value {
     position: absolute;
     top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    text-align: center;
+    left: 40px; /* 调整左侧距离 */
+    transform: translateY(-50%); /* 仅垂直居中 */
+    text-align: left; /* 左侧对齐文本 */
     z-index: 10;
 }
 
