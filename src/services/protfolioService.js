@@ -10,7 +10,7 @@ export async function getPortfolioData() {
     // 1. 从数据库获取用户所有交易记录
     const { data: transactions, error: transactionError } = await supabase
       .from('holderinfo')
-      .select('code, share, buyorsale, price');
+      .select('code, type, share, buyorsale, price');
 
     if (transactionError) throw transactionError;
 
@@ -27,7 +27,7 @@ export async function getPortfolioData() {
     const portfolio = {};
     
     transactions.forEach(transaction => {
-      const { code, share, buyorsale, price } = transaction;
+      const { code, type, share, buyorsale, price } = transaction;
       
       // 跳过没有当前价格的股票
       if (!currentPricesMap[code]) return;
@@ -36,10 +36,11 @@ export async function getPortfolioData() {
       if (!portfolio[code]) {
         portfolio[code] = {
           code,
-          totalBuyShares: 0,    // 总买入数量
-          totalSellShares: 0,   // 总卖出数量
-          buyAmount: 0,         // 总买入金额
-          sellAmount: 0,        // 总卖出金额
+          type : type,
+          totalBuyShares: 0,
+          totalSellShares: 0, 
+          buyAmount: 0,   
+          sellAmount: 0,
           currentPrice: currentPricesMap[code]
         };
       }
@@ -68,6 +69,7 @@ export async function getPortfolioData() {
           
         return {
           code: item.code,
+          type: item.type,
           companyName: getCompanyNameByCode(item.code),
           share: totalShares,
           avgBuyPrice: avgBuyPrice.toFixed(2),
@@ -77,7 +79,7 @@ export async function getPortfolioData() {
           increasePercent: `${increasePercent}%`
         };
       })
-      .filter(item => item.share > 0); // 过滤掉持有量为0的股票
+      .filter(item => item.share > 0); 
 
     return result;
   } catch (error) {
@@ -127,4 +129,63 @@ function getCompanyNameByCode(code) {
     'C': 'Citigroup Inc.',
     };
   return tickerMap[code] || code;
+}
+
+export async function getAssetDetails(){
+  //return protfolio networth and total assets (total assets = networth + cash)   
+  try {
+    const portfolioData = await getPortfolioData();
+    const netWorth = portfolioData.reduce((sum, item) => sum + parseFloat(item.totalValue), 0);
+    const cash = cacheService.userCash;
+    const totalAssets = netWorth + cash;
+
+    return {
+      netWorth: netWorth.toFixed(2),
+      totalAssets: totalAssets.toFixed(2),
+      cash: cash.toFixed(2)
+    };
+  } catch (error) {
+    console.error('Error fetching asset details:', error);
+    throw error;
+  }
+}
+
+export async function getPortfolioComposition(){
+  //return the percentage composition of each type, total shares of each type and amount of each type in the portfolio
+  //type can be 'Technology', 'BioTechnology', 'Finance'
+  try {
+    const portfolioData = await getPortfolioData();
+    const composition = {
+      Technology: { totalShares: 0, totalAmount: 0, percentage: 0 },
+      BioTechnology: { totalShares: 0, totalAmount: 0, percentage: 0 },
+      Finance: { totalShares: 0, totalAmount: 0, percentage: 0 }
+    };
+
+    portfolioData.forEach(item => {
+      if (item.type === 'Technology') {
+        composition.Technology.totalShares += item.share;
+        composition.Technology.totalAmount += parseFloat(item.totalValue);
+      } else if (item.type === 'Biotechnology') {
+        composition.BioTechnology.totalShares += item.share;
+        composition.BioTechnology.totalAmount += parseFloat(item.totalValue);
+      } else if (item.type === 'Finance') {
+        composition.Finance.totalShares += item.share;
+        composition.Finance.totalAmount += parseFloat(item.totalValue);
+      }
+    });
+
+    //calculate percentages
+    const totalShares = Object.values(composition).reduce((sum, item) => sum + item.totalShares, 0);
+    const totalAmount = Object.values(composition).reduce((sum, item) => sum + item.totalAmount, 0);
+    if (totalShares > 0) {
+      composition.Technology.percentage = ((composition.Technology.totalShares / totalShares) * 100).toFixed(2);
+      composition.BioTechnology.percentage = ((composition.BioTechnology.totalShares / totalShares) * 100).toFixed(2);
+      composition.Finance.percentage = ((composition.Finance.totalShares / totalShares) * 100).toFixed(2);
+    }
+
+    return portfolioData;
+  } catch (error) {
+    console.error('Error fetching portfolio composition:', error);
+    throw error;
+  }
 }

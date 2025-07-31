@@ -7,14 +7,6 @@ function setActive(element) {
   element.classList.add('active');
 }
 
-// 改变标题颜色并跳转新页面
-function changeColorAndJump(element) {
-  element.classList.toggle('blue');
-  setTimeout(() => {
-    window.open('portfolio-details.html', '_blank');
-  }, 300);
-}
-
 // 修改添加股票逻辑（弹出买入弹窗，插入数据）
 async function addToPortfolio(name, code, price) {
   // 记录当前股票信息，供买入弹窗使用
@@ -95,7 +87,7 @@ function showSellModal(portfolioItem) {
     errorDiv.style.color = '#00B42A';
     errorDiv.textContent = 'Sell successfully!';
     updatePortfolioTotal();
-    setTimeout(closeSellModal, 1200);
+    setTimeout(closeSellModal, 600);
   };
   document.getElementById('modalCloseBtnSell').onclick = closeSellModal;
 }
@@ -103,17 +95,6 @@ function showSellModal(portfolioItem) {
 function closeSellModal() {
   document.getElementById('sellModal').style.display = 'none';
 }
-
-function updatePortfolioTotal() {
-  const portfolioList = document.getElementById('portfolioList');
-  let total = 0;
-  portfolioList.querySelectorAll('.portfolio-item').forEach(item => {
-    const price = parseFloat(item.getAttribute('data-price'));
-    if (!isNaN(price)) total += price;
-  });
-  document.getElementById('portfolioTotal').textContent = 'Total: ' + total.toFixed(2);
-}
-    
 
 let allStocks = []; // 保存所有股票数据
 
@@ -132,6 +113,7 @@ async function fetchAndRenderStocks() {
 // 渲染股票表格
 function renderStocks(stocks) {
   const stockContainer = document.querySelector('.stock-container');
+  // 清空表格（保留表头）
   const tableHeader = stockContainer.querySelector('.table-header');
   stockContainer.innerHTML = '';
   if (tableHeader) stockContainer.appendChild(tableHeader);
@@ -139,11 +121,11 @@ function renderStocks(stocks) {
   stocks.forEach(stock => {
     const row = document.createElement('div');
     row.className = 'table-row';
-    
+
     // 确定价格变化样式
     const priceClass = stock.increaseAmount > 0 ? 'red' : 
                       stock.increaseAmount < 0 ? 'green' : 'gray';
-    
+
     row.innerHTML = `
       <div>
         <a href="/company/${encodeURIComponent(stock.companyName)}" class="company-link" target="_blank">
@@ -154,11 +136,11 @@ function renderStocks(stocks) {
       <div class="${priceClass} current-price">${stock.currentPrice}</div>
       <div class="${priceClass}">${stock.increasePercent}</div>
       <div class="${priceClass}">${stock.increaseAmount}</div>
+      <div class="type">${stock.type || ''}</div>
       <div>
-        <button class="add-btn" onclick="addToPortfolio('${stock.companyName}', '${stock.ticker}', '${stock.currentPrice}')">Add</button>
+        <button class="add-btn" onclick="addToPortfolio('${stock.companyName}', '${stock.ticker}', '${stock.currentPrice}')">Buy</button>
       </div>
     `;
-    
     stockContainer.appendChild(row);
   });
 }
@@ -330,6 +312,28 @@ async function fetchPortfolioList() {
 // 页面加载时调用
 document.addEventListener('DOMContentLoaded', function() {
   updateCashDisplay();
+    const navItems = document.querySelectorAll('.nav-item');
+  
+  navItems.forEach(item => {
+    item.addEventListener('click', function() {
+      // 移除所有导航项的active类
+      navItems.forEach(navItem => {
+        navItem.classList.remove('active');
+      });
+      
+      // 为当前点击的导航项添加active类
+      this.classList.add('active');
+      
+      // 根据点击的导航项切换页面内容或执行其他操作
+      if (this.textContent === 'My Financial Portfolio') {
+        // 切换到投资组合页面
+        window.location.href = 'portfolio-details.html';
+      } else if (this.textContent === 'Stock Investment') {
+        // 切换到股票投资页面
+        window.location.href = 'stock.html';
+      }
+    });
+  });
   fetchAndRenderStocks();
   fetchPortfolioList(); // 新增：渲染左侧投资组合
 });

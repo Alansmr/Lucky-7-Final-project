@@ -1,36 +1,81 @@
+// 导航栏切换逻辑
+function setActive(element) {
+  const navItems = document.querySelectorAll('.nav-item');
+  navItems.forEach(item => {
+    item.classList.remove('active');
+  });
+  element.classList.add('active');
+}
 
-// 模拟的投资组合数据
-const portfolios = [
-    { id: 1, name: "Technology Growth", value: 68450, change: 2.4, holdings: 8, active: true },
-    { id: 2, name: "Global Dividend", value: 32750, change: -0.8, holdings: 12, active: false },
-    { name: "Sustainable Energy", value: 41500, change: 5.2, holdings: 7, active: false },
-    { name: "Healthcare Innovators", value: 28500, change: 1.7, holdings: 9, active: false },
-    { name: "Real Estate Income", value: 57200, change: 0.9, holdings: 15, active: false }
-];
+async function fetchAndRenderPorfolios() {
+  try {
+    const response = await fetch('/api/protfolio'); // 修正拼写错误
+    return await response.json();
+  } catch (error) {
+    console.error('Failed to fetch portfolios:', error);
+    return []; // 错误时返回空数组避免崩溃
+  }
+}
 
 // 页面加载时初始化
-document.addEventListener('DOMContentLoaded', function() {
-    renderPortfolioList();
-    initCharts();
+document.addEventListener('DOMContentLoaded', async function() {
+  // 等待异步获取数据完成
+  const portfolios = await fetchAndRenderPorfolios();
+  console.log('Fetched portfolios:', portfolios);
+  
+  // 使用实际数据渲染
+  renderPortfolioList(portfolios);
+  initCharts(); // 确保此函数也能处理数据
 });
 
-// 渲染投资组合列表
-function renderPortfolioList() {
-    const portfolioList = document.getElementById('portfolioList');
-    portfolioList.innerHTML = '';
-    
-    portfolios.forEach(portfolio => {
-        const portfolioItem = document.createElement('div');
-        portfolioItem.className = `portfolio-item ${portfolio.active ? 'active' : ''}`;
-        portfolioItem.innerHTML = `
-            <h3>${portfolio.name} <span class="change ${portfolio.change >= 0 ? 'positive' : 'negative'}">${portfolio.change >= 0 ? '+' : ''}${portfolio.change}%</span></h3>
-            <div class="value">$${portfolio.value.toLocaleString()}</div>
-            <div class="details">
-                <span>Holdings: ${portfolio.holdings}</span>
-                <span>ID: #${portfolio.id}</span>
-            </div>
-        `;
-        portfolioItem.addEventListener('click', () => selectPortfolio(portfolio.id));
-        portfolioList.appendChild(portfolioItem);
-    });
+// 修改渲染函数接收参数
+function renderPortfolioList(portfolios) {
+  const portfolioList = document.getElementById('portfolioList');
+  portfolioList.innerHTML = '';
+  
+  // 添加空数据保护
+  if (!portfolios || portfolios.length === 0) {
+    portfolioList.innerHTML = '<div class="empty">No portfolios found</div>';
+    return;
+  }
+  
+  portfolios.forEach(portfolio => {
+    const portprice = portfolio.share * portfolio.currentPrice;
+    const portfolioItem = document.createElement('div');
+    portfolioItem.className = `portfolio-item ${portfolio.active ? 'active' : ''}`;
+    portfolioItem.innerHTML = `
+      <div class="nametag">
+        <strong>${portfolio.companyName}</strong> (${portfolio.code})
+      </div>
+      <div class="price">Value: $${portprice.toFixed(2)}</div>
+      <div class="shares">Shares: ${portfolio.share}</div>
+    `;
+    portfolioList.appendChild(portfolioItem);
+  });
 }
+
+
+document.addEventListener('DOMContentLoaded', function() {
+  const navItems = document.querySelectorAll('.nav-item');
+  
+  navItems.forEach(item => {
+    item.addEventListener('click', function() {
+      // 移除所有导航项的active类
+      navItems.forEach(navItem => {
+        navItem.classList.remove('active');
+      });
+      
+      // 为当前点击的导航项添加active类
+      this.classList.add('active');
+      
+      // 根据点击的导航项切换页面内容或执行其他操作
+      if (this.textContent === 'My Financial Portfolio') {
+        // 切换到投资组合页面
+        window.location.href = 'portfolio-details.html';
+      } else if (this.textContent === 'Stock Investment') {
+        // 切换到股票投资页面
+        window.location.href = 'stock.html';
+      }
+    });
+  });
+});
