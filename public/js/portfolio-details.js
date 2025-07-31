@@ -53,7 +53,7 @@ function renderPortfolioList(portfolios) {
   // 添加空数据保护
   if (!portfolios || portfolios.length === 0) {
     portfolioList.innerHTML = '<div class="empty">No portfolios found</div>';
-    return;
+    return;0
   }
   
   portfolios.forEach(portfolio => {
@@ -71,6 +71,43 @@ function renderPortfolioList(portfolios) {
   });
 }
 
+// 获取用户现金
+let userCash = fetch('/api/userCache')
+  .then(res => res.json())
+  .then(data => {
+    userCash = data.cash;
+    updateCashDisplay();
+  })
+  .catch(err => {
+    console.error('Failed to fetch user cash:', err);
+    userCash = 0; 
+    updateCashDisplay();
+  });
+
+
+// 更新现金显示
+function updateCashDisplay() {
+    const cashValue = document.getElementById('cashValue');
+    if (cashValue) {
+        cashValue.textContent = `$${userCash.toFixed(2)}`;
+    }
+}
+
+// 修改DOMContentLoaded事件处理
+document.addEventListener('DOMContentLoaded', async function() {
+    // 优先获取用户现金
+    await fetchUserCash();
+    
+    // 原有初始化逻辑
+    const portfolios = await fetchAndRenderPorfolios();
+    const stocks = await fetchAndRenderStocks();
+    
+    // 使用实际数据渲染
+    renderPortfolioList(portfolios);
+    renderIncreaseTop5(portfolios, stocks);
+    renderDecreaseTop5(portfolios, stocks);
+    initIndustryCompositionChart(); // 确保图表初始化
+});
 
 document.addEventListener('DOMContentLoaded', function() {
   const navItems = document.querySelectorAll('.nav-item');
