@@ -4,6 +4,7 @@ import { fileURLToPath } from 'url';
 import stocksRoute from './routes/stocksRoute.js';
 import protfolioRoute from './routes/protfolioRoute.js';
 import { cacheService } from './services/cacheService.js';
+import userCacheRoute from './routes/userCacheRoute.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -19,6 +20,7 @@ app.use(express.static(path.join(__dirname, '..', 'public')));
 
 app.use('/', stocksRoute);
 app.use('/', protfolioRoute);
+app.use('/', userCacheRoute);
 
 // 将根路径重定向到主页面
 app.get('/', (req, res) => {

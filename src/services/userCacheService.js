@@ -7,13 +7,13 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 
 class UserCacheService {
     constructor() {
-        this.userCash = 10000;
+        this.userCash;
         this.cacheTTL = 24 * 60 * 60 * 1000; 
         this.cacheTimestamp = Date.now(); 
     }
     
     async getUserCash() {
-        if (this.cacheTimestamp && (Date.now() - this.cacheTimestamp < this.cacheTTL)) {
+        if (this.userCash && this.cacheTimestamp && (Date.now() - this.cacheTimestamp < this.cacheTTL)) {
             return this.userCash;
         }
         

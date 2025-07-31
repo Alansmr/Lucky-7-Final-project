@@ -258,10 +258,20 @@ function addPortfolioItem({ companyname, code, price, share }) {
   updatePortfolioTotal();
 }
 
-let userCash = 10000; // 初始现金
+let userCash = fetch('/api/userCache')
+  .then(res => res.json())
+  .then(data => {
+    userCash = data.cash;
+    updateCashDisplay();
+  })
+  .catch(err => {
+    console.error('Failed to fetch user cash:', err);
+    userCash = 0; 
+    updateCashDisplay();
+  });
 
 function updateCashDisplay() {
-  document.getElementById('portfolioCash').textContent = `Cash: $${userCash.toFixed(2)}`;
+  document.getElementById('portfolioCash').textContent = `Cash: $${userCash}`;
 }
 
 // 页面加载时，读取 holderinfo 表并渲染左侧投资组合
