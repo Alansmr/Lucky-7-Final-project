@@ -347,7 +347,7 @@ body {
 .portfolio-cash .value {
     font-size: 1.8rem;
     font-weight: 700;
-    color: #27ae60; /* 绿色表示现金 */
+    color: #165DFF; /* 绿色表示现金 */
 }
 
 .portfolio-cash > span:first-child {

@@ -256,7 +256,7 @@ function updateCashDisplay() {
     console.error('Cash display element not found');
     return;
   }
-  cashDisplay.textContent = `Cash: $${userCash}`;
+  cashDisplay.textContent = `Cash: $${Number(userCash).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 }
 
 // 页面加载时，读取 holderinfo 表并渲染左侧投资组合
