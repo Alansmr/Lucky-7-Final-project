@@ -267,7 +267,8 @@ async function initIndustryCompositionChart() {
           }         
         }       
       }     
-    });          // 添加中心总价值显示     
+    });          
+    // 添加中心总价值显示     
     const centerValue = document.createElement('div');     
     centerValue.className = 'chart-center-value';     
     centerValue.innerHTML = `       

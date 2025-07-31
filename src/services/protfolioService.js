@@ -165,7 +165,7 @@ export async function getPortfolioComposition(){
       if (item.type === 'Technology') {
         composition.Technology.totalShares += item.share;
         composition.Technology.totalAmount += parseFloat(item.totalValue);
-      } else if (item.type === 'Biotechnology') {
+      } else if (item.type === 'BioTechnology') {
         composition.BioTechnology.totalShares += item.share;
         composition.BioTechnology.totalAmount += parseFloat(item.totalValue);
       } else if (item.type === 'Finance') {
