@@ -293,15 +293,6 @@ async function fetchPortfolioList() {
         } catch (err) {
           console.error(`渲染第${index + 1}条数据时出错:`, err, row);
         }
-        // // 清洗 companyname 字段中的多余空白符和换行符
-        // const cleanedCompanyName = (row.companyname || '').trim().replace(/\s+/g, ' ');
-        // console.log(`渲染第${index + 1}条:`, row);
-        // addPortfolioItem({
-        //   companyname: cleanedCompanyName,
-        //   code: row.code,
-        //   price: row.price,
-        //   share: row.share
-        // });
     });
     }
   } catch (err) {
