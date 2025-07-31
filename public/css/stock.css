@@ -2,6 +2,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 body, html {
@@ -13,25 +14,24 @@ body, html {
 }
 
 body {
-  margin: 0;
-  padding: 0;
-  background: #f5f7fa;
-  font-family: 'Segoe UI', 'Arial', sans-serif;
-  color: #222;
-  min-height: 100vh;
+    background: linear-gradient(135deg, #f0f9ff, #e6f7ff);
+    color: #2c3e50;
+    min-height: 100vh;
+    padding: 20px;
 }
 
 .main-container {
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  position: relative;
-  margin-top: 52px;
-   height: calc(100vh - 52px);
+    display: flex;
+    flex: 1;
+    max-width: 1600px;
+    margin: 0 auto;
+    gap: 20px;
+    height: calc(100vh - 90px);
+    align-items: stretch; /* 确保子元素等高 */
+    margin-top: 52px;
 }
 
-
-/* 工具栏左上角固定，高度与左侧区域一致 */
+/* 工具栏固定 */
 .nav {
   width: 100%;
   max-width: 1200px;
@@ -63,7 +63,7 @@ body {
 .nav-item.active {
   background: #165DFF;
   color: #fff;
-  font-weight: bold; /* 加粗当前选中的导航项 */
+  font-weight: bold;
 }
 
 .nav-container {
@@ -76,26 +76,27 @@ body {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-/* 主内容区布局 - 占满整个页面宽度 */
+/* 主内容区布局 - 占满整个页面宽度 */ 
 .portfolio-container {
-  width: 33.33vw;
-  min-width: 260px;
-  max-width: 480px;
+  width: 33%;
   background: #ffffff;
-  padding: 32px 18px 80px 18px;
+  border-radius: 16px;
+  padding: 25px;
   box-shadow: 0 8px 20px rgba(173, 216, 230, 0.25);
-  box-sizing: border-box;
-  border-right: 1px solid #e0f0ff;
-  position: relative;
+  border: 1px solid #e0f0ff;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
-  height: 100%; /* 改为百分比高度 */
-  overflow-y: auto;
+  overflow: hidden;
+  height: 100%; /* 保证高度撑满父容器 */
+  position: relative;
 }
 
 .portfolio-list {
+  flex: 1 1 auto;
+  overflow-y: auto;
   margin-top: 15px;
+  margin-bottom: 20px; /* 给cash卡片留空间 */
+  min-height: 0;
 }
 
 .portfolio-item {
@@ -138,12 +139,6 @@ body {
   margin-top: 4px;
 }
 
-.portfolio-total {
-  margin-top: 20px;
-  text-align: right;
-  font-weight: bold;
-}
-
 .portfolio-item .shares  {
         display: flex;
         font-size: 0.9rem;
@@ -171,7 +166,7 @@ body {
 }
 
 /* 右侧区域（占2/3宽度） */
-.right-container {
+/* .right-container {
   flex: 1 1 0;
   width: 66.67vw;
   min-width: 0;
@@ -183,6 +178,18 @@ body {
   height: 100%;
   overflow-x: auto;
   overflow-y: auto;
+} */
+
+.right-container {
+    width: 67%;
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 30px;
+    box-shadow: 0 8px 20px rgba(200, 230, 255, 0.3);
+    border: 1px solid #e0f0ff;
+    display: flex;
+    flex-direction: column;
+    height: 100%; /* 确保高度与左侧一致 */
 }
 
 /* 搜索栏样式 */
@@ -190,7 +197,7 @@ body {
   flex: 1;
   margin: 0;
   position: relative;
-  max-width: 100%;       /* 保证和表格一样宽 */
+  max-width: 100%;      /* 确保不超出容器 */
 }
 
 .search-bar input[type="text"] {
@@ -219,7 +226,7 @@ body {
 .search-row {
   display: flex;
   align-items: center;
-  width: 100%;           /* 保证和表格一样宽 */
+  width: 100%;           
   max-width: 100%;       /* 防止超出 */
   margin-bottom: 18px;
   box-sizing: border-box;
@@ -260,17 +267,19 @@ body {
 
 .table-header > div,
 .table-row > div {
-  flex: 1;
+  flex: 1 1 0;
   text-align: center;
   padding: 12px 0;
   border-right: 1px solid #d4eeff;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 .table-header > div:last-child,
 .table-row > div:last-child {
-  flex: 0.8;
   border-right: none;
 }
+
 
 /* 行样式 */
 .table-row {
@@ -513,12 +522,9 @@ button:hover,
 .modal-buy-btn:hover {
   background: #0E42D2;
 }
-
 .portfolio-cash {
-  position: absolute;
-  left: 18px;
-  bottom: 24px;
-  background: #fff;
+  position: relative;
+  background: #f1f9ff;
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(22,93,255,0.08);
   padding: 14px 28px 14px 18px;
@@ -530,6 +536,12 @@ button:hover,
   font-weight: bold;
   min-width: 160px;
   transition: box-shadow 0.2s;
+  margin-top: auto; /* 保证在底部（如果父容器是flex column） */
+  margin-bottom: 0;
+  left: unset;
+  bottom: unset;
+  max-width: 100%; /* 不超出父容器 */
+  box-sizing: border-box;
 }
 
 .portfolio-cash:hover {
@@ -568,4 +580,51 @@ button:hover,
     padding: 24px 4vw 80px 4vw;
     height: auto;
   }
+}
+
+.company-link {
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.company-link:visited,
+.company-link:active,
+.company-link:focus {
+  color: inherit;
+  text-decoration: none;
+}
+
+.company-link:hover {
+  color: #165DFF;
+  text-decoration: none;
+}
+
+.portfolio-title {
+  font-size: 1.6rem;
+  font-weight: bold;
+  color: #165DFF;
+  text-align: center;
+  margin-bottom: 18px;
+  letter-spacing: 1px;
+}
+
+/* 滚动条样式 */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(224, 247, 255, 0.5);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #a8d8ff;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #85c1ff;
 }
