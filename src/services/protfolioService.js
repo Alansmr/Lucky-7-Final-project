@@ -156,9 +156,9 @@ export async function getPortfolioComposition(){
   try {
     const portfolioData = await getPortfolioData();
     const composition = {
-      Technology: { totalShares: 0, totalAmount: 0 },
-      BioTechnology: { totalShares: 0, totalAmount: 0 },
-      Finance: { totalShares: 0, totalAmount: 0 }
+      Technology: { totalShares: 0, totalAmount: 0, percentage: 0 },
+      BioTechnology: { totalShares: 0, totalAmount: 0, percentage: 0 },
+      Finance: { totalShares: 0, totalAmount: 0, percentage: 0 }
     };
 
     portfolioData.forEach(item => {
@@ -173,6 +173,15 @@ export async function getPortfolioComposition(){
         composition.Finance.totalAmount += parseFloat(item.totalValue);
       }
     });
+
+    //calculate percentages
+    const totalShares = Object.values(composition).reduce((sum, item) => sum + item.totalShares, 0);
+    const totalAmount = Object.values(composition).reduce((sum, item) => sum + item.totalAmount, 0);
+    if (totalShares > 0) {
+      composition.Technology.percentage = ((composition.Technology.totalShares / totalShares) * 100).toFixed(2);
+      composition.BioTechnology.percentage = ((composition.BioTechnology.totalShares / totalShares) * 100).toFixed(2);
+      composition.Finance.percentage = ((composition.Finance.totalShares / totalShares) * 100).toFixed(2);
+    }
 
     return portfolioData;
   } catch (error) {
