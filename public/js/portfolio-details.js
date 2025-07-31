@@ -53,7 +53,7 @@ function renderPortfolioList(portfolios) {
   // 添加空数据保护
   if (!portfolios || portfolios.length === 0) {
     portfolioList.innerHTML = '<div class="empty">No portfolios found</div>';
-    return;
+    return;0
   }
   
   portfolios.forEach(portfolio => {
