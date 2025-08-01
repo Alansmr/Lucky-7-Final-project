@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Financial Portfolio</title>
+  <link rel="stylesheet" href="css/stock.css">
+</head>
+
+<body>
+
+    <!-- 导航栏容器 -->
+  <div class="nav-container">
+    <div class="nav">
+      <div class="nav-item">My Financial Portfolio</div>
+      <div class="nav-item">Stock Investment</div>
+    </div>
+  </div>
+
+  <!-- 主内容区 -->
+  <div class="main-container">
+    <!-- 左侧区域 -->
+    <div class="portfolio-container">
+      <div class="portfolio-title">My Financial Portfolio</div>
+      <div class="portfolio-list" id="portfolioList">
+        <!-- 动态添加的投资组合项将显示在这里 -->
+      </div>
+      <div id="portfolioCash" class="portfolio-cash">
+        <span class="portfolio-cash-icon">
+          <svg viewBox="0 0 20 20"><path d="M10 2C5.58 2 2 5.58 2 10s3.58 8 8 8 8-3.58 8-8-3.58-8-8-8zm.75 13h-1.5v-1.5h1.5V15zm1.43-4.57c-.2.2-.43.37-.68.5-.25.13-.41.22-.5.28-.09.06-.18.13-.26.21-.08.08-.14.18-.18.29-.04.11-.06.24-.06.39h-1.5c0-.36.06-.67.17-.92.11-.25.27-.47.47-.65.2-.18.44-.34.72-.47.28-.13.48-.23.6-.3.12-.07.22-.15.3-.25.08-.1.12-.22.12-.36 0-.21-.08-.38-.23-.51-.15-.13-.36-.2-.62-.2-.27 0-.48.07-.63.2-.15.13-.23.32-.23.56h-1.5c0-.38.09-.71.27-.99.18-.28.43-.5.76-.66.33-.16.72-.24 1.17-.24.45 0 .84.08 1.17.24.33.16.58.38.76.66.18.28.27.61.27.99 0 .29-.1.54-.3.74z"/></svg>
+        </span>
+        <span id="portfolioCashText">Cash: $10000</span>
+      </div>
+    </div>
+
+    <!-- 右侧区域 -->
+    <div class="right-container">
+      <!-- 搜索栏 -->
+      <div class="search-row">
+        <div class="search-bar">
+          <input
+            type="text"
+            id="stockSearchInput"
+            placeholder="Search by company name or ticker."
+          />
+        </div>
+        <span class="search-icon-outer" id="searchBtn">
+          <svg id="searchIconSvg" width="22" height="22" viewBox="0 0 22 22" fill="none">
+            <circle cx="10" cy="10" r="8" stroke="#888" stroke-width="2"/>
+            <line x1="16.2" y1="16.2" x2="21" y2="21" stroke="#888" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </span>
+      </div>
+
+      <!-- 股票表格 -->
+      <div class="stock-container">
+        <!-- 表头和表格内容由JS渲染 -->
+        <!-- 表头 -->
+        <div class="table-header">
+          <div>Company Name</div>
+          <div>Ticker</div>
+          <div>Current Price</div>
+          <div>Increase (%)</div>
+          <div>Increase (Amount)</div>
+          <div>Type</div>
+          <div>Action</div>
+        </div>
+        <!-- 数据行将通过JavaScript动态生成 -->
+      </div>
+    </div>
+  </div>
+
+    <!-- 买入股票的模态框 -->
+  <div id="buyModal" class="modal" style="display:none;">
+    <div class="modal-content">
+      <span class="modal-close" id="modalCloseBtn">❌</span>
+      <div class="modal-title">Buy Stock</div>
+      <input type="text" id="buyAmountInput" placeholder="Enter shares to buy" />
+      <div class="modal-error" id="modalError"></div>
+      <button id="modalBuyBtn" class="modal-buy-btn">Buy</button>
+    </div>
+  </div>
+
+  <!-- 卖出股票的模态框 -->
+  <div id="sellModal" class="modal" style="display:none;">
+    <div class="modal-content">
+      <span class="modal-close" id="modalCloseBtnSell">❌</span>
+      <div class="modal-title" id="sellModalTitle">Sell Stock</div>
+      <input type="text" id="sellAmountInput" placeholder="Enter shares to sell" />
+      <div class="modal-error" id="modalErrorSell"></div>
+      <button id="modalSellBtn" class="modal-sell-btn">Sell</button>
+    </div>
+  </div>
+  
+
+  <script src="js/stock.js"></script>
+</body>
+</html>

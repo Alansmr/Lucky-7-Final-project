@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Investment Portfolio Analysis</title>
+    <script src="js/portfolio-details.js"></script>
+    <link rel="stylesheet" href="css/portfolio-details.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> 
+    <script src="js/portfolio-details.js"></script>
+    <link rel="stylesheet" href="css/portfolio-details.css">    
+</head>
+<body>
+    
+    <!-- 导航栏容器 -->
+  <div class="nav-container">
+    <div class="nav">
+      <div class="nav-item active">My Financial Portfolio</div>
+      <div class="nav-item">Stock Investment</div>
+    </div>
+  </div>
+
+    <div class="main-container">
+        <div class="portfolio-container">
+            <!-- 投资组合列表保持不变 -->
+            <div class="portfolio-list" id="portfolioList">
+                <!-- 动态添加的投资组合项将显示在这里 -->
+            </div>
+            
+            <!-- 新增现金显示区域 -->
+            <div id="cashDisplay" class="portfolio-total portfolio-cash">
+                <span>Cash:</span>
+                <span class="value" id="cashValue">Loading...</span>
+            </div>
+        </div>
+        
+    <!-- 右侧详细信息区域 -->
+    <div class="details-container">
+        <div class="dashboard-layout">
+            <!-- 顶部行业分配图表 -->
+            <div class="top-chart-section">
+                <h3><i class="fas fa-chart-pie"></i> Industry Allocation</h3>
+                <div class="chart-container" style="position: relative; height: 300px;">
+                    <canvas id="industryCompositionChart"></canvas>
+                </div>
+            </div>
+            
+            <!-- 下部排行榜区域 -->
+            <div class="ranking-section">
+                <!-- 涨幅Top 5 -->
+                <div class="ranking-card">
+                    <h3><i class="fas fa-arrow-up"></i> Daily Increase Top 5</h3>
+                    <div class="ranking-content">
+                        <div id="increaseTop5"></div>
+                    </div>
+                </div>
+                
+                <!-- 跌幅Top 5 -->
+                <div class="ranking-card">
+                    <h3><i class="fas fa-arrow-down"></i> Daily Decrease Top 5</h3>
+                    <div class="ranking-content">
+                        <div id="decreaseTop5"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+</body>
+</html>
